@@ -70,7 +70,7 @@ The modification deadlines in FR-020 and FR-021 are **TBD**. The additional supp
 
 ## Interpretation and verification
 
-The statements above are the recorded baseline, not evidence of stakeholder sign-off. Identifiers and MoSCoW categories are unchanged. The checks below clarify observable outcomes without assigning unagreed values. Proposed policies are separated below.
+These checks define observable outcomes for the recorded baseline. Unagreed parameters remain TBD.
 
 | Requirement | Observable acceptance check |
 | --- | --- |
@@ -104,7 +104,7 @@ The statements above are the recorded baseline, not evidence of stakeholder sign
 
 ## Proposed lifecycle model
 
-**All rules below are design proposals, not stakeholder-approved requirements.** P-BOOK, P-PAY, P-CALL, and P-INTEGRATION refine the recorded baseline; [open decisions](open-questions.md) still govern their adoption. No approved timeout is invented.
+These lifecycle rules are **proposed**. See the [decision register](open-questions.md) for adoption and timing dependencies.
 
 | Proposal | Model | Proposed transitions and safeguards |
 | --- | --- | --- |
@@ -114,9 +114,9 @@ The statements above are the recorded baseline, not evidence of stakeholder sign
 | P-INTEGRATION | DeliveryStatus: PENDING, DELIVERED, FAILED | Restaurant acknowledgement establishes DELIVERED. Handoff failure is separate from reservation/payment status; recover using the same reference. |
 | P-CALL | WaiterCall: CREATED, NOTIFIED, ACKNOWLEDGED, RESOLVED, DELIVERY_FAILED | Endpoint receipt establishes NOTIFIED. A staff member with the WAITER role acknowledges and resolves the call within the authorized restaurant. Re-routing preserves the call reference; timing/escalation remains TBD. |
 
-P-BOOK proposes positive guest count, capacity validation, a valid interval, and half-open intervals [start, end). Failed modification retains the original booking. The end instant releases the occupied interval even if a background state update is delayed. Cancellation eligibility, no-show handling, cleaning buffers, local-time interpretation, and any earlier release policy remain D-02–D-03. No temporary payment-dependent table hold is introduced by this proposal. If stakeholders select holds later, an explicit finite hold deadline and release operation must replace this policy before implementation.
+P-BOOK proposes a positive guest count, capacity checks, and a valid half-open interval [start, end). Failed changes retain the original booking. The end instant releases the table even if the state update is delayed. D-02/D-03 cover local-time rules, cleaning buffers, cancellation, no-shows, and early release. A future hold policy would need a finite deadline and explicit release operation.
 
-P-PAY proposes one pre-order per reservation, positive quantities, item-price snapshots, and a quote bound to the payment amount/currency. A finite checkout deadline is required by the proposal; its duration and trigger remain unresolved (D-04). An abandoned draft must expire at that deadline rather than remain an active checkout indefinitely. A draft never creates an additional table hold.
+P-PAY proposes one pre-order per reservation, positive quantities, item-price snapshots, and a quote bound to amount and currency. Abandoned drafts expire at the proposed finite checkout deadline (duration and trigger open in D-04). Drafts add no table hold.
 
 ### Checkout exits and financial consistency
 
@@ -131,11 +131,9 @@ P-PAY proposes one pre-order per reservation, positive quantities, item-price sn
 | Checkout deadline passes or visit is cancelled/expires while payment is unresolved | CONFIRMED until its own end, or CANCELLED/EXPIRED through its separate lifecycle; payment does not extend it | REVIEW_REQUIRED; no fulfilment handoff | Preserve INITIATED/UNKNOWN and reconcile |
 | Verified success arrives for a cancelled/expired/ineligible order or visit | No automatic rebooking | REVIEW_REQUIRED; no automatic fulfilment | SUCCEEDED; retain financial truth and route for authorized review |
 
-A late verified rejection for an ineligible order is recorded as FAILED while the order remains REVIEW_REQUIRED pending the agreed resolution policy. Refund eligibility, refund execution, paid-order changes, and review ownership are TBD; the model does not pretend that received funds disappear. A late success cannot revive an expired table booking or silently start food preparation.
+A late verified rejection records `FAILED` and leaves an ineligible order in `REVIEW_REQUIRED` until closure rules are agreed. Refund eligibility and execution, paid-order changes, and review ownership remain TBD.
 
-Under P-PAY, initiation checks eligibility and registers the attempt as one logical decision. Cancellation/expiry checks the same state: if initiation won the race, the order enters reconciliation/review rather than claiming no payment exists. The coordination mechanism is unselected. This prevents a cancel-versus-pay race from producing an apparently cancelled unpaid order with an ignored charge.
-
-Unknown or already initiated attempts block a fresh attempt. Duplicate results resume unfinished effects without repeating charges/orders/handoffs; SUCCEEDED never regresses. Recoverable result application and review/expiry processing are proposed reliability obligations, not an implemented scheduler or a selected transaction technology.
+Initiation checks eligibility and registers the attempt together. Cancellation and expiry check the same state. If initiation wins, reconcile or review the existing attempt. An `INITIATED` or `UNKNOWN` attempt blocks a fresh one. Duplicate results resume unfinished effects without repeating charges, orders, or handoffs. `SUCCEEDED` never regresses. Coordination and scheduling mechanisms remain open.
 
 ## Proposed staff permissions
 
@@ -155,8 +153,4 @@ Waiter acknowledgement/resolution and manager availability/menu editing are prop
 
 ### Multiple responsibilities per employee
 
-P-STAFF assigns a set of roles to an employee's restaurant-specific staff membership. WAITER and MANAGER are distinct roles, not mutually exclusive employee subclasses. An employee with WAITER alone has no Manager permissions; an employee assigned both roles can perform the union of those roles' permitted actions in that restaurant.
-
-The same person may have a different role set in another restaurant. Each request checks the active restaurant membership and the required role; a role assigned in restaurant A gives no access to restaurant B. A small venue can assign both roles to one employee, while a larger venue assigns them to different employees. No role hierarchy, general permission engine, or platform-wide Manager power is introduced.
-
-The role allocation remains proposed (D-11). The table specifies role capabilities, not privileges inherited by every employee. No default role assignment is assumed.
+P-STAFF assigns WAITER and MANAGER independently per restaurant membership. A dual-role member can use both roles' permissions in that restaurant. Each request checks the active membership and role. A role at another restaurant confers no access. Role assignment remains proposed under D-11. No default assignment, role hierarchy, or general permission engine is specified.

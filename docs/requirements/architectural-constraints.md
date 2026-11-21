@@ -1,6 +1,6 @@
 # Architectural Constraints
 
-The original modal verbs are preserved: “must” identifies mandatory constraints; “should” identifies recommendations. Integration is conditional where the source says “where required”.
+“Must” denotes a constraint. “Should” denotes a recommendation.
 
 - **AC-001** — The system must be able to integrate with existing restaurant automation/POS systems where required.
 
@@ -14,7 +14,7 @@ The original modal verbs are preserved: “must” identifies mandatory constrai
 
 - **AC-006** — External integrations should be isolated from the core business logic so that different restaurant systems can be supported.
 
-These constraints do not select a technology stack or identify specific integration partners. See the [open questions](open-questions.md) and [architecture documentation](../architecture/README.md).
+Technology and partner choices remain open in the [decision register](open-questions.md).
 
 ## Responsibility boundaries
 
@@ -26,33 +26,25 @@ These constraints do not select a technology stack or identify specific integrat
 | External payment provider | Process payment and provide a verifiable result/reference | Recommended by AC-002 and adopted as proposal P-PAY; no vendor, processing protocol, or credential design is selected |
 | Staff notification endpoint | Receive a call notification for the relevant restaurant staff | Delivery evidence and offline/escalation policy remain D-07–D-08 |
 
-AC-004 requires separate restaurant business entities. The proposed permission checks use restaurant scope; this does not select a database isolation mechanism or imply a multi-country release.
+AC-004 requires separate restaurant business entities. P-STAFF proposes restaurant-scoped access. Data isolation and any multi-country rollout remain design choices.
 
 ## Proposed integration contracts
 
-The logical interfaces in the focused class diagrams express responsibilities, not deployed services or database APIs:
+| Logical port | Contract |
+| --- | --- |
+| BookingAuthority | Advisory preview and atomic create-if-available. [Outcomes and ownership](../architecture/adr/adr-001-authoritative-booking.md#decision) |
+| POSIntegration | Handoff of confirmed reservations or eligible paid pre-orders, with acknowledgement or failure. Wider data synchronization remains open. |
+| PaymentProviderPort | Initiate an attempt, verify results, and query an unresolved attempt. [Verification and handoff](../architecture/adr/adr-002-verified-payment-and-restaurant-handoff.md#decision) |
+| StaffNotifier | Notify the relevant restaurant staff and report endpoint receipt or failure. [Waiter-call sequence](../architecture/sequence-diagram.md#waiter-call) |
 
-- **BookingAuthority:** preview availability and atomically create a reservation if the table remains available. The proposed booking outcomes are `CONFIRMED`, `CONFLICT` for overlap, `INVALID` for invalid input, and `SOURCE_UNAVAILABLE` when an authoritative result cannot be obtained. The contract supports NFR-004. No specific transaction, lock, storage engine, or distributed architecture is chosen.
-- **POSIntegration:** deliver a confirmed reservation or paid pre-order and return acknowledgement/failure. The original undefined interface is replaced by this explicit contract. Booking/table information is read through BookingAuthority in these scenarios; wider synchronization ownership remains open.
-- **PaymentProviderPort:** initiate an attempt, verify a provider result, and query an unresolved result. Business order coordination depends on this contract, rather than making an OrderService implement a POS interface.
-- **StaffNotifier:** notify the relevant restaurant's staff and distinguish endpoint receipt from failure. Human acknowledgement remains a separate call state.
-
-An interface may be fulfilled by an internal component or a partner adapter as appropriate. These are proposals supporting AC-006; implementing each as a microservice is neither required nor recommended by this documentation.
+An internal component or partner adapter can fulfil a port. See the [proposed deployment](../architecture/deployment-operational-view.md#proposed-architecture).
 
 ## Authority and failure handling
 
-Displayed table availability is advisory. The authoritative create-if-available operation must prevent conflicting successful bookings even if the preview was free. If other channels bypass that authority, global conflict prevention cannot be claimed; a synchronization/ownership agreement is required (D-02).
-
-P-INTEGRATION proposes independently tracked delivery states and repeated handoff using the same business reference. A failed handoff is retained for recovery and does not roll back a verified payment. Retry timing, limits, escalation, acknowledgement semantics, and any compensation remain D-06. Confirmed reservations are handed off after creation; pre-orders are handed off after verified prepayment in the illustrated P-PAY workflow.
-
-P-PAY treats timeouts as unknown and verifies results before applying them. Stable attempt/business references and duplicate-safe processing are proposed safeguards, not selected middleware. P-CALL similarly separates call creation, notification receipt, and staff response.
-
-Frameworks, databases, hosting, provider partners, identity technology, numerical performance targets, and data residency are not selected. See the [decision register](open-questions.md) and [architecture index](../architecture/README.md).
+All booking channels must coordinate through the chosen authority to satisfy NFR-004 (D-02). P-INTEGRATION keeps handoff separate from booking and payment results and reuses the business reference on retries. D-06 governs acknowledgement, recovery limits, escalation, and compensation. See [failure handling and recovery](../architecture/deployment-operational-view.md#release-recovery-and-rollback).
 
 ## Planning scale and expansion boundary
 
-The [target-business and workload envelope](../overview.md#target-businesses-and-planning-scale) is proposal P-SCALE, not a new AC or capacity guarantee. AC-004 supports multiple separate restaurant businesses; it does not grant chain-wide administration, multi-country data sharing, or globally scoped staff roles.
+[P-SCALE](../overview.md#target-businesses-and-planning-scale) is illustrative. Chain-wide access and cross-country data sharing remain unspecified. Check active restaurant membership and role under the [P-STAFF permission model](functional-requirements.md#proposed-staff-permissions).
 
-P-STAFF assigns roles per employee/restaurant membership. One employee may have both WAITER and MANAGER in one restaurant without giving every waiter Manager access. The interface/authorization design must evaluate the requested action against the active restaurant and assigned role set.
-
-A future country rollout, including China if selected, requires the [geographical expansion assessment](../architecture/README.md#geographical-expansion-assessment): localization, time-zone interpretation, applicable data obligations, network latency, regional payments/POS contracts, monitoring, and revised workload/deployment evidence. No country-specific legal claim, infrastructure region, or hosting vendor is selected here.
+The [expansion assessment](../architecture/README.md#geographical-expansion-assessment) lists the evidence needed for a future country rollout, including China as an example.

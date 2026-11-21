@@ -4,51 +4,30 @@
 
 Tabiora is a planned restaurant platform that helps customers choose a restaurant, reserve a table, pre-order dishes, request waiter assistance, and pay by phone.
 
-**Project status: Design and documentation.** This repository contains a Software Engineering specification and proposed UML models. It does not contain an implemented application or claim completed integrations.
+**Status: Design and documentation.** Application and integration implementation are pending.
 
-## Problem
+## Capabilities and architecture
 
-Planning a restaurant visit can involve uncertain table availability and waiting. During the visit, customers may struggle to find a waiter or settle the bill promptly. Tabiora connects visit planning with restaurant staff workflows through a smartphone-accessible experience.
+The candidate MVP includes restaurant discovery, table reservations, timed pre-orders and prepayment, waiter calls, in-restaurant bill payment, and staff management of incoming bookings and orders. The [functional requirements](docs/requirements/functional-requirements.md#must-have) define release priorities. The [overview](docs/overview.md#roles-and-responsibilities) covers users and the proposed pilot.
 
-## Main user roles
-
-- **Customer:** discover restaurants, book, pre-order, pay, and call a waiter.
-- **Waiter:** receive customer-call notifications; acknowledgement/resolution and relevant pre-order read access are proposed workflow details.
-- **Manager:** proposed owner of restaurant-scoped reservation/pre-order management. One employee may hold both Waiter and Manager roles in a restaurant; each role's permissions remain distinct.
-
-Payment Provider and Restaurant/POS are external collaborators. The [overview](docs/overview.md) defines their boundaries, and the [permission matrix](docs/requirements/functional-requirements.md#proposed-staff-permissions) separates recorded staff scope from proposed role allocation.
-
-## Core platform capabilities and release scope
-
-| Scope | Recorded requirements | Planning interpretation |
-| --- | --- | --- |
-| Candidate MVP / Must Have | Restaurant discovery and filtering; information, floor plans and menus; reservations; pre-orders and prepayment; restaurant handoff; waiter calls; bill payment; staff reservation/pre-order management (FR-001–FR-014) | Baseline release capabilities; detailed acceptance rules still need validation |
-| Later candidates / Should Have | Current occupancy, adaptive menus, activity/history, profiles, recommendations, reservation/pre-order changes (FR-015–FR-021) | Retain their recorded priority; deadlines and detailed rules remain TBD |
-| Optional candidates / Could Have | Average occupancy, dish advice, additional in-restaurant ordering, favorites, feedback (FR-022–FR-026) | Include only when selected for a release |
-| Excluded initially / Won't Have | Customer blacklist management (FR-027) | No initial-release staff permission or workflow |
-
-This is a candidate MVP based on the recorded priorities, not a newly approved release commitment. A prototype may simulate providers or a subset of interactions; that does not remove Must Have requirements from the intended release. Multiple restaurants are required by AC-004. The proposed audience is table-service restaurants; the [P-SCALE pilot envelope](docs/overview.md#target-businesses-and-planning-scale) gives explicit unapproved planning counts and workload. International rollout is not established.
+The pilot proposes one modular backend for the Customer App and Staff Interface. It uses logical ports for booking authority, payment verification, restaurant handoff, and staff notifications. See the [Architecture Map](docs/architecture/architecture-map.md).
 
 ## Documentation
 
-Read the overview, requirements, use cases, class models, and interaction scenarios in that order.
-
-| Section | Contents | Status |
-| --- | --- | --- |
-| [Project overview](docs/overview.md) | Problem, roles, workflows, and boundaries | Design context |
-| [Functional requirements](docs/requirements/functional-requirements.md) | FR baseline, acceptance checks, proposed states and permissions | Original IDs/priorities preserved; policies proposed/TBD |
-| [Non-functional requirements](docs/requirements/non-functional-requirements.md) | NFR baseline and measurement/reliability plan | Numerical targets/workload TBD |
-| [Architectural constraints](docs/requirements/architectural-constraints.md) | Mandatory constraints, recommendations, integration boundaries | Technology/authority decisions open |
-| [Use cases](docs/requirements/use-cases.md) | Four role-based diagrams and UC-01–UC-08 specifications | Recorded capabilities with labelled refinements |
-| [Architecture and UML](docs/architecture/README.md) | Baseline, Architecture Map, ADRs, deployment view, and 12 editable UML views | Proposed design |
-| [Open stakeholder questions](docs/requirements/open-questions.md) | Decision and proposal register | No new stakeholder approval inferred |
-| [Development approach](docs/development/methodology.md) | Practical Rapid Prototyping/Scrum plan and candidate acceptance/DoD | Planned work |
-
-FR, NFR, and AC identifiers remain stable. The existing requirements are the recorded baseline; diagram detail does not independently create an approved requirement. Proposed policies use P-IDs, and unresolved decisions use D-IDs.
+| Section | Start here |
+| --- | --- |
+| [Project overview](docs/overview.md) | Problem, stakeholders, scope, and pilot assumptions |
+| [Functional requirements](docs/requirements/functional-requirements.md) | FR priorities, acceptance checks, states, and permissions |
+| [Non-functional requirements](docs/requirements/non-functional-requirements.md) | Quality attributes and verification |
+| [Architectural constraints](docs/requirements/architectural-constraints.md) | Mandatory constraints and integration recommendations |
+| [Use cases](docs/requirements/use-cases.md) | Role diagrams and UC-01–UC-08 |
+| [Architecture and UML](docs/architecture/README.md) | Baseline, diagrams, ADRs, and deployment view |
+| [Open stakeholder questions](docs/requirements/open-questions.md) | Questions, decisions, and proposals |
+| [Development approach](docs/development/methodology.md) | Sprint plan and prototype validation |
 
 ## Laboratory materials
 
-The [source Google document](https://docs.google.com/document/d/1uYLRcOJxa0YR9Lsh4C2f--5P2zQ14fUCAJ1MeqVXjpA/edit) groups materials by laboratory work. This repository organizes them by subject; the new views explicitly refine or replace earlier diagrams.
+The [coursework in Google Docs](https://docs.google.com/document/d/1uYLRcOJxa0YR9Lsh4C2f--5P2zQ14fUCAJ1MeqVXjpA/edit) is indexed below by its repository counterpart.
 
 | Source section | Repository location |
 | --- | --- |

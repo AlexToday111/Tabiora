@@ -6,7 +6,7 @@
 
 ## Context / ASR
 
-FR-008 covers pre-order prepayment. FR-011 separately requires payment of the restaurant bill by phone. FR-009 requires confirmed booking and order information to reach the restaurant. NFR-005 requires encrypted connections for sensitive data, and NFR-008 requires logging important operations. AC-001 and AC-005 establish restaurant-system integration requirements. AC-002 recommends delegated card processing and AC-006 recommends isolating integrations. A callback may be late, duplicated, lost, or received out of order. The restaurant may be unreachable after a booking or payment is confirmed.
+FR-008 covers prepayment, FR-011 covers bill payment, and FR-009 covers restaurant handoff. NFR-005 and NFR-008 require encrypted transport and operation logging. AC-001/AC-005 govern restaurant integration. AC-002/AC-006 recommend delegated card processing and isolated integrations. Callbacks can be delayed, duplicated, lost, or out of order. Restaurant outages can follow booking or payment confirmation.
 
 ## Decision
 
@@ -26,6 +26,6 @@ FR-008 covers pre-order prepayment. FR-011 separately requires payment of the re
 
 ## Links / Verification
 
-Inject timeouts, untrusted results, and lost callbacks. Verify `UNKNOWN` is visible and same-reference reconciliation resolves it when evidence arrives. Exercise duplicate and out-of-order results, late success on an expired visit, and interruption after recording payment success but before handoff. Simulate POS outage and replay with the same business reference. Verify payment and reservation truth survive the outage, no duplicate business effects occur, and only agreed acknowledgement produces `DELIVERED`.
+Inject timeouts, untrusted results, and lost callbacks. Check visible `UNKNOWN` and same-reference reconciliation. Test duplicate and out-of-order results, late success after expiry, and interruption before handoff. Simulate a POS outage and replay the same business reference. Preserve payment and reservation outcomes, suppress duplicate effects, and require acknowledgement for `DELIVERED`.
 
 [Original Lab 9 ADR-002](https://docs.google.com/document/d/1uYLRcOJxa0YR9Lsh4C2f--5P2zQ14fUCAJ1MeqVXjpA/edit?tab=t.7qbrdid5xjwc#heading=h.zfsils3t0ksz) · [Architecture Map](../architecture-map.md) · [Ordering model](../class-diagram.md#ordering-and-payment) · [Payment sequence](../sequence-diagram.md#payment-initiation-and-outcomes) · [Canonical lifecycle](../../requirements/functional-requirements.md#proposed-lifecycle-model) · [UC-06](../../requirements/use-cases.md#uc-06--pay-the-restaurant-bill) · [Reliability checks](../../requirements/non-functional-requirements.md#proposed-reliability-checks) · [Lab 11 Test Plan](https://docs.google.com/document/d/1uYLRcOJxa0YR9Lsh4C2f--5P2zQ14fUCAJ1MeqVXjpA/edit?tab=t.r75t8oa0l1gw#heading=h.suljx3hzzq1j)

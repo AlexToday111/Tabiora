@@ -1,10 +1,10 @@
 # Open Stakeholder Questions and Decisions
 
-Status: **Design-stage tracking.** Questions, documented baseline facts, and proposed design choices are separate. Instructor feedback authorizes improving the specification; it does not establish stakeholder answers, a country rollout, or numerical service targets.
+**Design-stage register.** It tracks stakeholder questions, recorded requirements, and proposals. Instructor feedback informs revisions. Stakeholder answers and approvals require a decision record.
 
 ## Stakeholder questions
 
-Each Q-ID covers one information need. Questions are reworded and split from the earlier bundled register; the unresolved topics are preserved. Status is Open unless an answer is explicitly recorded. D-IDs link questions to technical decision tracking, not predetermined choices.
+Questions remain open until an answer is recorded. D-IDs identify the affected decisions.
 
 ### Business and release planning
 
@@ -91,7 +91,7 @@ These are facts already present in the repository, not newly claimed stakeholder
 
 ## Decision register
 
-The entries below are **unresolved design areas**, not approved decisions. Alternatives are engineering analysis, not a forced-choice stakeholder questionnaire.
+These design decisions remain unresolved.
 
 | ID | Area | Status | Impact / unresolved design work | Related requirements |
 | --- | --- | --- | --- | --- |
@@ -124,12 +124,10 @@ State labels are owned by the [proposed lifecycle model](functional-requirements
 
 ## Recorded modelling revisions
 
-The undefined POSIntegration has an explicit proposed contract. Domain entities, service orchestration, provider results and restaurant delivery are separated. The instructor's role criticism is addressed through restaurant-specific multiple-role assignment, rather than merging Waiter and Manager. Checkout abandonment is distinct from rejection or provider timeout.
-
-Scrum organizes a single backlog/Sprint cycle; prototyping is a validation technique inside that cycle. These documentation/model revisions are not records of stakeholder acceptance.
+The focused models define POSIntegration, separate orchestration from provider and delivery outcomes, and distinguish checkout abandonment from rejection or timeout. In response to instructor feedback, [P-STAFF](functional-requirements.md#multiple-responsibilities-per-employee) allows multiple roles on one restaurant membership. The [methodology](../development/methodology.md) uses one Scrum backlog and Sprint cycle.
 
 ## Decision completion rule
 
-An actual decision record must identify the selected policy, rationale, stakeholder/owner, date and affected Q/FR/NFR/AC/model references. Until that record exists, keep status Open, Proposed or Planning assumption. Approved baseline facts and unanswered questions must remain distinguishable.
+Record the selected policy, rationale, stakeholder or owner, date, and affected Q/FR/NFR/AC/model references. Until then, retain the Open, Proposed, or Planning assumption status.
 
 [Class design](../architecture/class-diagram.md) · [Interaction assumptions](../architecture/sequence-diagram.md#design-assumptions)

@@ -1,12 +1,10 @@
 # Class Models
 
-Status: **Proposed logical design.** These models refine the recorded requirements; they are not a database schema, deployment architecture, selected technology stack, or implemented application.
-
-The [functional requirements](../requirements/functional-requirements.md#proposed-lifecycle-model) define the proposed lifecycle vocabulary. The [decision register](../requirements/open-questions.md) records unapproved policies.
+**Proposed logical models.** See the [lifecycle model](../requirements/functional-requirements.md#proposed-lifecycle-model) for state definitions.
 
 ## How the top-down design was derived
 
-The starting point was the customer's planned restaurant visit, not a list of UML features. The team first identifies restaurant discovery, reserving a table, arranging food/payment, and requesting service as the business responsibilities in FR-001–FR-014. It then decomposes those responsibilities into objects that carry different facts or lifecycles.
+The core workflows in FR-001–FR-014 determine the domain objects and which responsibilities need separate lifecycles.
 
 | High-level concept | Decomposition | Reason for the classes/relationships | Supported workflow |
 | --- | --- | --- | --- |
@@ -15,9 +13,7 @@ The starting point was the customer's planned restaurant visit, not a list of UM
 | Restaurant service | User, RestaurantStaff membership, StaffRole, WaiterCall | A person can have a different set of responsibilities in each restaurant. WAITER and MANAGER roles are data on that membership, not employee subclasses that imply inherited permissions. A call has its own receipt/acknowledgement/resolution lifecycle. | UC-04 call handling; UC-05 staff operations |
 | Later personalization | ActivityLog, PreferenceProfile, Recommendation | Recorded activity, derived preferences and suggested choices are different facts. They remain Should Have concepts, not extra core booking dependencies. | UC-08, FR-017–FR-019 |
 
-Only after this domain decomposition are coordinating responsibilities assigned to BookingService, OrderService, PaymentService and CallService. Their operations correspond to the sequence messages. Interfaces are introduced where the workflow needs an authoritative booking decision, verified provider result, restaurant acknowledgement or notification receipt.
-
-This is Tabiora's top-down reasoning: workflow responsibility → domain facts and lifecycles → coordinating operations → external contracts. It does not claim that a class diagram proves implementation correctness. Artificial in/out/inout demonstration operations were removed; each retained operation serves a documented scenario.
+BookingService, OrderService, PaymentService, and CallService coordinate those workflows. Operations match the [sequence diagrams](sequence-diagram.md). Ports isolate the authoritative booking decision, provider result, restaurant acknowledgement, and notification receipt.
 
 ## General domain model
 
@@ -25,9 +21,7 @@ This is Tabiora's top-down reasoning: workflow responsibility → domain facts a
 
 [Full-size SVG](../../assets/diagrams/class-diagram.svg) · [PlantUML](../../assets/diagrams/source/class-diagram.puml)
 
-This overview shows customer visits, restaurant tables, reservations, pre-orders, line items, payment attempts, and waiter calls. ActivityLog, PreferenceProfile, and Recommendation retain Should Have scope (FR-017–FR-019). Attributes and orchestration operations are deliberately moved to focused views.
-
-Restaurant offers menu items through its menu; the ordering view details that path. Booking and staff views add floor-plan and user-role detail. Multiplicities describe the proposed model, including one pre-order per reservation (P-PAY); they are not independently approved rules.
+The overview shows visit entities and their relationships. Focused views add attributes and operations. Multiplicities follow the proposals, including one pre-order per reservation under P-PAY.
 
 ## Booking and reservation
 
@@ -35,11 +29,9 @@ Restaurant offers menu items through its menu; the ordering view details that pa
 
 [Full-size SVG](../../assets/diagrams/booking-class-diagram.svg) · [PlantUML](../../assets/diagrams/source/booking-class-diagram.puml)
 
-Customer makes reservations for RestaurantTable; FloorPlan displays the restaurant's tables. These are ordinary associations because deletion/lifetime ownership is not established. Table capacity is an input to proposed validation, not a global availability Boolean. Availability depends on interval and authoritative reservations.
+Customer–Reservation and FloorPlan–RestaurantTable are ordinary associations. Availability depends on the requested interval and authoritative reservations. Capacity is a validation input.
 
-BookingService coordinates preview, booking creation, proposed changes, and delivery recording. BookingAuthority provides preview and atomic create-if-available; the authority may be Tabiora or restaurant-side (D-02). This contract expresses NFR-004 without choosing locks, a database, or a distributed protocol. changeReservation represents Should Have FR-020; its authority/update contract and deadline remain D-03.
-
-Reservation uses P-BOOK states, with separate P-INTEGRATION delivery status. P-BOOK now proposes cancellation as a separate operation and expiry at the booked end. A confirmed reservation blocks only its finite interval; leaving optional checkout does not silently cancel the visit. Cancellation eligibility and any alternative hold policy still need approval.
+BookingService coordinates previews, creation, changes, and delivery recording. BookingAuthority owns the atomic decision under [ADR-001](adr/adr-001-authoritative-booking.md). The proposed `changeReservation` supports FR-020, with contract and deadlines open in D-03. Reservation and handoff use separate [lifecycles](../requirements/functional-requirements.md#proposed-lifecycle-model).
 
 **Traceability:** FR-004–FR-005, FR-009, FR-012, FR-020; NFR-004; AC-001, AC-004–AC-006.
 
@@ -49,13 +41,9 @@ Reservation uses P-BOOK states, with separate P-INTEGRATION delivery status. P-B
 
 [Full-size SVG](../../assets/diagrams/ordering-class-diagram.svg) · [PlantUML](../../assets/diagrams/source/ordering-class-diagram.puml)
 
-PreOrder owns its OrderItems, so composition is meaningful here. A draft may have zero items; submission requires at least one valid item under P-PAY. OrderItem references MenuItem and snapshots the quoted unit price. Menu–MenuItem is an ordinary association; no deletion cascade is assumed.
+PreOrder owns OrderItems by composition. Drafts may be empty. Submission requires a valid item under P-PAY. An OrderItem references MenuItem and snapshots its quoted unit price. Menu–MenuItem remains an ordinary association.
 
-OrderService coordinates item validation, quoting, order state, and handoff. PaymentService coordinates payment attempts, verified results, and reconciliation. Payment is a domain record of an attempt, not an external provider or an object the customer calls directly.
-
-PaymentProviderPort has explicit initiation, verification, and status-query operations. POSIntegration has an explicit confirmed-information handoff contract. Services depend on these interfaces; OrderService no longer claims to implement POSIntegration. These are logical boundaries supporting AC-006, not a mandate to build separate network services.
-
-PAID order state, SUCCEEDED payment state, and DELIVERED restaurant handoff are different facts. Unknown outcomes prevent a new payment attempt under P-PAY. DRAFT cancellation/expiry before initiation creates no payment attempt. A late successful charge on a closed order/visit records SUCCEEDED but routes the order to REVIEW_REQUIRED, without rebooking or fulfilment. Pricing adjustments, refunds, paid-order modification, and bill ownership remain D-04–D-05. FR-011 is specified separately in UC-06; a pre-order is not silently reused as the whole restaurant bill.
+OrderService validates items, quotes, tracks order state, and coordinates handoff through POSIntegration. PaymentService manages attempts, verification, and reconciliation through PaymentProviderPort. Payment records an attempt. [ADR-002](adr/adr-002-verified-payment-and-restaurant-handoff.md) covers eligibility and late results. [UC-06](../requirements/use-cases.md#uc-06--pay-the-restaurant-bill) covers the separate bill.
 
 **Traceability:** FR-006–FR-009; FR-011 integration concept only; NFR-005, NFR-008; AC-002, AC-005–AC-006.
 
@@ -65,28 +53,30 @@ PAID order state, SUCCEEDED payment state, and DELIVERED restaurant handoff are 
 
 [Full-size SVG](../../assets/diagrams/staff-class-diagram.svg) · [PlantUML](../../assets/diagrams/source/staff-class-diagram.puml)
 
-User represents a person; Customer is a customer specialization. RestaurantStaff is now a membership linking that person to one restaurant and a set of StaffRole values. WAITER and MANAGER are independently assignable roles, not mutually exclusive subclasses. A small restaurant may give one membership both roles; a larger venue may assign them to separate people. The same person's membership elsewhere can have different roles.
+Customer specializes User. RestaurantStaff links a person to a restaurant and its assigned StaffRole set. WAITER and MANAGER are roles on the membership. The [permission matrix](../requirements/functional-requirements.md#proposed-staff-permissions) defines their scopes and candidate actions.
 
-Permissions are associated with those roles and the active restaurant membership. A WAITER-only employee does not acquire MANAGER powers. No enterprise permission hierarchy or automatic cross-restaurant access is introduced.
-
-CallService coordinates call creation, routing, acknowledgement, and resolution. StaffNotifier distinguishes endpoint receipt from failure; receiving a notification is not human acknowledgement. StaffOperationsService applies the proposed role and restaurant checks before management operations.
-
-Menu/availability change operations are clearly candidate proposals; no existing requirement grants every staff member those permissions. Detailed management transitions remain D-11. Waiter pre-order access is context-only read access, while Manager management is a proposed role allocation. See the [permission matrix](../requirements/functional-requirements.md#proposed-staff-permissions).
+CallService coordinates call creation, routing, acknowledgement, and resolution. StaffNotifier reports endpoint receipt or failure. StaffOperationsService checks restaurant membership and role before applying management actions. Exact transitions remain open in D-11.
 
 **Traceability:** FR-010, FR-012–FR-014, FR-027; NFR-002, NFR-006; AC-004.
 
 ## Contract and result interpretation
 
-Identifier and DateTime are logical types, not chosen libraries. AvailabilityResult distinguishes an available or unavailable table, `INVALID` input, and `SOURCE_UNAVAILABLE` when an authoritative preview cannot be obtained. BookingResult carries `CONFIRMED` with a reservation reference, `CONFLICT` for overlap, `INVALID` for invalid input, or `SOURCE_UNAVAILABLE` when the authoritative booking outcome cannot be obtained. ProviderResult distinguishes verified success, verified rejection, and no verified terminal result. DeliveryResult establishes recipient acknowledgement/receipt or a failure to establish delivery. FulfilmentDecision distinguishes eligible PAID from REVIEW_REQUIRED after verified success. cancelUnpaid/expireUnpaid require no unresolved or successful attempt; reviewUnresolved preserves the provider reference when eligibility closes. Exact protocol/error-code formats remain TBD.
+Identifier and DateTime are logical types. Protocol and error formats remain TBD.
 
-The same service/interface operation names appear in the [sequence diagrams](sequence-diagram.md). Supporting validation inside an operation is described by notes, rather than pretending that every validation step is a separate deployed component.
+| Result | Meaning |
+| --- | --- |
+| AvailabilityResult | Table available or unavailable, `INVALID` input, or `SOURCE_UNAVAILABLE` when the authoritative preview cannot be obtained. |
+| BookingResult | `CONFIRMED` with a reservation reference, `CONFLICT`, `INVALID`, or `SOURCE_UNAVAILABLE`. See [ADR-001](adr/adr-001-authoritative-booking.md). |
+| ProviderResult | Verified success, verified rejection, or no verified terminal result. |
+| DeliveryResult | Recipient acknowledgement or receipt, or failure to establish it. |
+| FulfilmentDecision | `PAID` when eligible, `REVIEW_REQUIRED` when ineligible after verified success. |
+
+`cancelUnpaid` and `expireUnpaid` require that no attempt is unresolved or successful. `reviewUnresolved` preserves the provider reference when eligibility closes.
 
 ## Review notes
 
-The overloaded original model has been replaced by one domain overview and three focused views. Arbitrary aggregation/ownership is removed; pre-order line-item composition is retained. Undefined POSIntegration is replaced by a real proposed contract, and order orchestration is separated from provider processing.
+Loyalty, tax/discount algorithms, and generic login operations remain deferred under D-13. See the [decision register](../requirements/open-questions.md) for remaining contract and policy choices.
 
-Unsupported loyalty, tax/discount algorithm and generic login operations remain deferred to D-13. Cancellation and expiry now have explicit proposed safeguards; their business eligibility/deadline values remain open. Meaningful activity/profile/recommendation concepts remain in the overview. Restaurant bill details, staff action transitions, booking ownership, lifecycle policies, and recovery timing remain unresolved.
-
-The [class PNG export](../../assets/diagrams/restaurant-service-class-diagram.png) is regenerated from the same [editable general-model source](../../assets/diagrams/source/class-diagram.puml). It replaces the earlier image-only export; SVG remains the primary scalable rendering. The source guide maps both formats to the maintained source.
+The [class PNG export](../../assets/diagrams/restaurant-service-class-diagram.png) shares the [general model source](../../assets/diagrams/source/class-diagram.puml).
 
 [Back to architecture and UML](README.md)

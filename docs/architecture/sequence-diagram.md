@@ -1,14 +1,10 @@
 # Sequence Diagrams
 
-Status: **Proposed interaction design.** Four scoped scenarios describe intended behavior, not implemented integrations. Reservation, pre-order creation, payment and waiter-call processing have distinct start/end conditions.
+**Proposed interactions** for booking, checkout, payment, and waiter calls.
 
 ## Design assumptions
 
-- P-BOOK creates a finite CONFIRMED reservation independently of optional prepayment. Its booked end releases the interval; approved cancellation/hold policy remains D-03.
-- P-PAY creates a finite draft checkout, distinguishes pre-initiation exits from initiated payment, and preserves verified financial outcomes. Deadline values/triggers and refund policy remain D-04.
-- P-INTEGRATION separates business status from acknowledged restaurant handoff. P-CALL distinguishes call creation, notification receipt and staff response.
-- P-STAFF uses a role set per employee/restaurant membership. One employee may have both WAITER and MANAGER; neither role automatically inherits the other.
-- The [functional requirements](../requirements/functional-requirements.md#proposed-lifecycle-model) own state labels and transition proposals. Numeric deadlines, identity/storage technology and provider protocols are not selected.
+The [baseline](architecture-baseline.md) defines invariants. See the [proposed lifecycle model](../requirements/functional-requirements.md#proposed-lifecycle-model) for states and the [permission matrix](../requirements/functional-requirements.md#proposed-staff-permissions) for staff roles.
 
 ## Table reservation
 
@@ -18,9 +14,9 @@ Status: **Proposed interaction design.** Four scoped scenarios describe intended
 
 **Start:** customer has selected table, interval and guest count. **End:** a confirmed finite reservation, `CONFLICT`, `INVALID`, or `SOURCE_UNAVAILABLE`. **Traceability:** UC-02, FR-004–FR-005, FR-009, NFR-004.
 
-Preview is advisory. An authoritative preview can report that a table is unavailable for the interval. `BookingAuthority.createIfAvailable` performs one coordinated conflict decision and creation across all booking channels. A competing request can win after preview. The request that loses receives `CONFLICT`. Invalid booking input returns `INVALID`. If Tabiora cannot obtain an authoritative result, it reports `SOURCE_UNAVAILABLE` and leaves confirmation unestablished. A lost reply may conceal a successful write, so the outcome requires verification at the authority. The critical fragment expresses atomicity without selecting a lock or database.
+The preview is advisory. `BookingAuthority.createIfAvailable` decides and writes atomically across participating channels. `SOURCE_UNAVAILABLE` leaves confirmation unestablished. Verify any uncertain write at the authority, since a lost reply can follow a commit. See [ADR-001](adr/adr-001-authoritative-booking.md) for the outcome contract.
 
-After success, restaurant handoff is tracked separately. Failed handoff does not free the booking. Under revised P-BOOK, the table is blocked only during its booked interval, and the reservation becomes EXPIRED at its end. This does not introduce a permanent payment-dependent hold. Cancellation is a separate authorized operation; policy remains D-03.
+Failed handoff leaves the finite reservation intact. The booked end releases the interval. Cancellation follows the separate visit lifecycle under P-BOOK (D-03).
 
 ## Pre-order and payment
 
@@ -40,7 +36,7 @@ OrderService creates DRAFT, accepts selected items/quantities, and validates a q
 | Explicitly cancel | CANCELLED | No attempt created | Not automatically cancelled |
 | Leave without confirming | DRAFT, then EXPIRED at the proposed finite deadline | No attempt created | Not automatically cancelled; booked interval remains finite |
 
-The draft itself never holds extra table capacity. Its finite checkout deadline and trigger require approval; a pre-release policy must assign them rather than leaving abandoned checkouts open forever. Cancellation/expiry and initiation evaluate the same current state as a logical decision. If initiation won the race, reconcile the existing attempt instead of asserting that no charge exists.
+A draft adds no table hold. D-04 governs the proposed finite checkout deadline. Initiation and cancellation/expiry evaluate the same current state. Reconcile the existing attempt if initiation wins the race. [Checkout rules](../requirements/functional-requirements.md#checkout-exits-and-financial-consistency)
 
 ## Payment initiation and outcomes
 
@@ -62,11 +58,9 @@ PaymentService rechecks order, quote, reservation and outstanding-attempt eligib
 | Verified late rejection for an ineligible order | FAILED | Retain REVIEW_REQUIRED pending agreed closure policy |
 | Duplicate/out-of-order result | Apply verified new effects only; never regress SUCCEEDED | Resume unfinished work without duplicate orders/handoffs |
 
-Successful financial processing and permission to fulfil an order are separate facts. Received funds cannot be erased by changing the visit status. Review/refund ownership and eligibility remain unresolved; no automatic refund is invented.
+Callbacks and reconciliation use the same eligibility checks. If payment success was recorded before an interruption, recover order and handoff effects with the same attempt or business reference. D-04/D-05 govern review and refund rules. [ADR-002](adr/adr-002-verified-payment-and-restaurant-handoff.md)
 
-Reconciliation and callback handling use the same eligibility checks. A crash between recording success and updating the order/handoff must be recoverable using the same attempt/business reference. No implementation mechanism is selected.
-
-FR-011 bill settlement remains UC-06 with open bill-source/adjustment rules; it is not silently equated with prepayment.
+FR-011 bill settlement is a separate flow. [UC-06](../requirements/use-cases.md#uc-06--pay-the-restaurant-bill)
 
 ## Waiter call
 
@@ -76,14 +70,10 @@ FR-011 bill settlement remains UC-06 with open bill-source/adjustment rules; it 
 
 **Start:** customer requests service in a validated restaurant/table context. **End:** rejected context, explicit delivery failure, or a retained call progressing through staff acknowledgement/resolution. **Traceability:** UC-04, FR-010/FR-014, NFR-002/NFR-006.
 
-CallService routes through StaffNotifier. Endpoint receipt creates NOTIFIED; an employee with WAITER in that restaurant can record ACKNOWLEDGED and then RESOLVED. A MANAGER-only membership does not gain call-handling rights. A dual-role employee can act as Waiter using the same restaurant membership.
-
-Failed/unknown receipt leaves DELIVERY_FAILED and an honest customer-facing result. Conditional re-routing retains the call reference. Timing, no-response escalation and context verification remain D-07–D-08.
+CallService routes through StaffNotifier. Endpoint receipt gives `NOTIFIED`. Staff with the WAITER role in the active restaurant can record `ACKNOWLEDGED` and `RESOLVED`. Failed or unknown receipt leaves `DELIVERY_FAILED`. Any reroute retains the call reference. Context, timing, and no-response escalation remain open under D-07/D-08. [Staff permissions](../requirements/functional-requirements.md#proposed-staff-permissions)
 
 ## Consistency and source coverage
 
-Service messages correspond to operations in the [class models](class-diagram.md). alt selects alternatives, opt marks conditional actions and loop repeats dish selection; none implies an approved retry count. Important transitions are to be logged under NFR-008 without choosing a logging product.
+Messages use the operations in the [class models](class-diagram.md). Sequence fragments show branches and repetition. Log important transitions under NFR-008.
 
-The earlier combined flow is decomposed rather than duplicated: sequence-diagram is reservation; preorder-payment-sequence is draft/checkout exit; payment-sequence is provider processing; waiter-call-sequence is staff service. Every published SVG/PNG is mapped to a maintained editable source in the [source guide](../../assets/diagrams/source/README.md).
-
-[Use cases](../requirements/use-cases.md) · [Architecture index](README.md)
+[Use cases](../requirements/use-cases.md) · [Editable sources and exports](../../assets/diagrams/source/README.md#files) · [Architecture index](README.md)

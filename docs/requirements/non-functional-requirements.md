@@ -1,6 +1,6 @@
 # Non-Functional Requirements
 
-Requirements retain their original MoSCoW priorities. The Won't Have section records an exclusion status rather than an additional requirement.
+Recorded MoSCoW priorities apply to the requirements below.
 
 ## Must Have
 
@@ -49,7 +49,7 @@ Supported modern mobile devices (NFR-007), scheduled maintenance arrangements (N
 
 ## Verification conditions
 
-Baseline IDs and priorities above are unchanged. The following is a verification plan; no measured result, numerical service-level target, or selected infrastructure is implied.
+Planned verification. Open parameters require agreement before acceptance.
 
 | ID | Measurement or verification method | Open parameters |
 | --- | --- | --- |
@@ -68,7 +68,7 @@ Baseline IDs and priorities above are unchanged. The following is a verification
 
 ## Proposed reliability checks
 
-These are design-validation cases for P-BOOK, P-PAY, P-CALL, and P-INTEGRATION, not approved numerical service levels.
+These failure-injection checks cover P-BOOK, P-PAY, P-CALL, and P-INTEGRATION.
 
 - Inject authoritative booking-source failure: return `SOURCE_UNAVAILABLE` when no authoritative result can be obtained. Require authoritative evidence before reporting booking success.
 - Inject a payment timeout and duplicate/out-of-order results: retain UNKNOWN until verified reconciliation, apply success once, and never regress SUCCEEDED.
@@ -76,21 +76,15 @@ These are design-validation cases for P-BOOK, P-PAY, P-CALL, and P-INTEGRATION, 
 - Inject staff endpoint failure: retain the waiter call with DELIVERY_FAILED; a customer-facing acceptance message must not claim a waiter has received it.
 - Verify retry/reconciliation operations are bounded by a policy once one is agreed; timeout, retry, retention, and recovery-time values remain TBD.
 
-All measurements must record test environment, dataset, workload/concurrency, network conditions, observation window, failures, and the exact design revision. Until D-08 is agreed, results can characterize behavior but cannot demonstrate compliance with an unspecified time/availability threshold.
+Record environment, dataset, workload, concurrency, network, observation window, failures, and design revision. Use results to characterize behavior until D-08 defines acceptance targets.
 
 ## Availability: operating hours versus measured service
 
-NFR-003 specifies intended booking/payment operating hours: customers should be able to use them throughout the day, with scheduled maintenance exceptions. **24/7 operation is not 100% uptime.** Unexpected software, network, provider, or restaurant-integration failures can interrupt service.
-
-For design validation, measure usable service time over an agreed observation window using booking/payment probes. Report calendar availability against the full window and, separately, any adjusted availability excluding approved maintenance. State the denominator, maintenance exclusions, probe interval, and how partial/provider outages are counted. Unexpected downtime is reported; it is not silently relabelled as maintenance. No numerical availability target or maintenance allowance is approved.
-
-A valid booking conflict is a correct business response, not downtime. An unreachable booking authority is a service failure; a payment UNKNOWN is a pending financial outcome that must be reported honestly, not a successful completed payment.
+NFR-003 defines a 24/7 operating window with scheduled maintenance. Report calendar availability and, separately, availability excluding approved maintenance. Record the denominator, exclusions, probe interval, and partial or provider outages. Unexpected outages remain failures. A valid booking conflict counts as a correct response. An unreachable authority is a service failure, and payment `UNKNOWN` remains a pending financial outcome. Numerical targets and maintenance allowances remain open.
 
 ## Mobile compatibility criteria
 
-In NFR-007, "supported" means a documented, agreed platform/browser/version matrix, not every device described as modern. The actual operating systems, browser versions, viewport sizes, assistive interaction needs, and network profiles are still stakeholder decisions (D-08).
-
-The proposed matrix must verify touch-based restaurant discovery, readable table selection, menu use, booking, checkout/cancel/abandon outcomes, waiter calls, and bill payment without clipped controls or unusable error messages. Record the exact device/browser versions and task results. Until that matrix is agreed, full device-compatibility compliance cannot be claimed.
+Agree the device, OS, browser, viewport, accessibility, and network matrix under D-08. Record exact versions and run touch-based discovery, table selection, menu, booking, checkout including cancellation and abandonment, waiter call, and bill payment. Check for clipped controls and readable error messages.
 
 ## Quality attributes in Tabiora
 
@@ -103,11 +97,9 @@ The proposed matrix must verify touch-based restaurant discovery, readable table
 | Testability | Reproduce source outages, conflicts, duplicate/late events, expiry, and different staff assignments without real charges | Controlled prototype/provider/POS simulations; production integration evidence remains separate |
 | Scalability | Add separate restaurants and evaluate increasing customers, sessions, request rates, and integration variation | Load/isolated-access tests based on a declared workload, not a generic medium-scale label |
 
-Hardware size, server count, database products, and hosting regions are possible implementation choices, not quality attributes or approved requirements.
-
 ## Illustrative workload and lifecycle tests
 
-Use the single P-SCALE envelope in the [overview](../overview.md#target-businesses-and-planning-scale) as an initial synthetic workload, not a performance target or a proven capacity. Reproduce its account/table data, concurrent sessions, daily mix, and one-minute bursts separately. Record traffic distribution and test same-table contention independently. Search/menu rates, call/payment rates, and acceptance thresholds remain D-08.
+Use [P-SCALE](../overview.md#target-businesses-and-planning-scale) for synthetic accounts and tables, concurrent sessions, daily mix, and one-minute bursts. Record traffic distribution and test same-table contention independently. Search, menu, call, and payment rates and acceptance thresholds remain open in D-08.
 
 Additionally test: cancel before any payment attempt; leave a draft until its finite proposed expiry; close the app after initiation; expire/cancel the visit before a late verified success; and recover unfinished effects without rebooking or duplicate fulfilment. An expired/cancelled order receiving payment success must enter REVIEW_REQUIRED rather than disappearing or being fulfilled automatically.
 

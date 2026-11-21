@@ -1,16 +1,10 @@
 # Architecture and UML
 
-Status: **Proposed logical design.** The models support academic review and design validation. They do not establish a technology stack, database schema, deployed services, or implemented behavior.
+**Proposed design.**
 
 ## Reading order
 
-Start with [Architecture Baseline v1.0](architecture-baseline.md) and the [Architecture Map](architecture-map.md).
-
-1. [Use cases](../requirements/use-cases.md): product boundary and Customer/Waiter/Manager responsibilities.
-2. [Class models](class-diagram.md): a domain overview, then booking, ordering/payment, and staff operations.
-3. [Sequence diagrams](sequence-diagram.md): table reservation, pre-order/checkout exits, payment outcomes, and waiter calls.
-4. [Architectural constraints](../requirements/architectural-constraints.md): responsibility boundaries and integration recommendations.
-5. [Decision register](../requirements/open-questions.md): approval gaps and alternative policies.
+Start with the [Architecture Baseline v1.0](architecture-baseline.md) and [Architecture Map](architecture-map.md), then follow the decisions and UML views below. The [constraints](../requirements/architectural-constraints.md) explain integration boundaries. Open choices are in the [decision register](../requirements/open-questions.md).
 
 ## Architecture decisions and operations
 
@@ -44,17 +38,11 @@ The Architecture Map and all 12 maintained UML views have editable sources and g
 
 ## Scope and modelling conventions
 
-The [recorded requirements](../requirements/functional-requirements.md) own scope and MoSCoW priorities. Their proposed lifecycle section owns the state vocabulary. P-BOOK, P-PAY, P-INTEGRATION, P-STAFF, and P-CALL identify unapproved policies used consistently in the diagrams.
-
-Domain entities represent business facts; application services coordinate operations; explicit interfaces describe authoritative booking, provider access, restaurant handoff, and staff notification. These distinctions do not imply separate microservices or selected storage technologies.
-
-AC-001/AC-005 establish integration capability; AC-002/AC-006 remain recommendations. The diagrams adopt provider delegation and separated integration contracts as proposals. Authoritative availability ownership, lifecycle/deadline policies, bill/payment rules, staff allocation, and recovery targets remain open.
-
-FR-011 bill payment and FR-020/FR-021 modification are specified in use cases but not claimed as complete detailed integration sequences. Could Have features remain documented candidates. Blacklist management is excluded initially. International rollout and physical order-refusal/refund workflows have no approved detailed requirements.
+The [functional requirements](../requirements/functional-requirements.md) define scope, priorities, [proposed states](../requirements/functional-requirements.md#proposed-lifecycle-model), and [staff permissions](../requirements/functional-requirements.md#proposed-staff-permissions). The [deployment view](deployment-operational-view.md) groups logical modules in one proposed backend. Bill payment (FR-011) and changes (FR-020/FR-021) have [use cases](../requirements/use-cases.md) and await detailed integration sequences.
 
 ## Geographical expansion assessment
 
-International rollout is a future scenario, not an approved requirement or selected deployment. China is an example to assess, not a committed launch country. P-SCALE currently assumes one pilot region/country; the [overview](../overview.md#target-businesses-and-planning-scale) owns the illustrative workload.
+P-SCALE assumes a [single-region pilot](../overview.md#target-businesses-and-planning-scale). China is an example for assessing a future rollout.
 
 | Software concern | Consequence to investigate before adding a country | Evidence needed; no decision implied |
 | --- | --- | --- |
@@ -67,12 +55,10 @@ International rollout is a future scenario, not an approved requirement or selec
 | Capacity and deployment | Recalculate restaurant/customer counts, peak request mix, regional dependencies, rollout and rollback needs | A revised workload envelope and deployment options; no automatic move to microservices or a region per country |
 | Monitoring and recovery | Observe regional latency, errors, delivery failures, payment UNKNOWN/review queues, and cross-region dependencies | Regional dashboards/probes and agreed recovery ownership/targets |
 
-Finding restaurant partners is a business activity. Software scalability is demonstrated through workload, isolation, latency, failure/recovery, and integration evidence. More countries do not by themselves establish a particular architecture. Any expansion must revisit D-01, D-02, D-05, D-08, and the proposed scale envelope before implementation.
+Before expanding, revisit D-01, D-02, D-05, D-08, and P-SCALE using the evidence above. Partner availability and software capacity require separate checks.
 
 ## Superseded diagrams and maintenance
 
-The old combined class model and sequence are explicitly replaced at their existing source/SVG filenames by focused current views. Pre-order creation/checkout exits are now separate from provider payment processing. Existing [class PNG](../../assets/diagrams/restaurant-service-class-diagram.png) and [use-case PNG](../../assets/diagrams/restaurant-service-use-case-diagram.png) are regenerated from the current general class/use-case sources. The source guide links each PNG and SVG to its editable source; there are no maintained image-only diagrams.
-
-Edit the corresponding PlantUML or draw.io source, regenerate the SVG, inspect readability, update affected prose, and check links and requirement/state consistency together. Rendering instructions are in the [source guide](../../assets/diagrams/source/README.md#rendering).
+The focused views replace the earlier combined class and sequence models. The [source guide](../../assets/diagrams/source/README.md#files) maps maintained sources to exports and gives the validation workflow.
 
 [Back to project documentation](../../README.md#documentation)

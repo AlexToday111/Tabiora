@@ -1,8 +1,6 @@
 # Use Cases
 
-Status: **Design specification.** The diagrams decompose the same product boundary into overview and role-specific views. They describe recorded capabilities; detailed role allocations, lifecycle policies, and recovery behavior are proposals, not implemented or stakeholder-approved behavior.
-
-Must/Should/Could labels refer to the unchanged [functional requirements](functional-requirements.md). P-BOOK, P-PAY, P-STAFF, P-CALL, and P-INTEGRATION refer to the [proposal register](open-questions.md#proposal-register). Staff management requires authenticated, authorized access (NFR-006). Waiter and Manager are distinct roles: one employee may play both within a restaurant. A WAITER-only assignment never grants MANAGER rights; assignments do not transfer across restaurants.
+**Design specification.** Priorities follow the [functional requirements](functional-requirements.md). Policies follow the [proposal register](open-questions.md#proposal-register). NFR-006 requires authenticated, authorized management access. See the [permission matrix](functional-requirements.md#proposed-staff-permissions) for restaurant scope and dual roles.
 
 ## General use-case diagram
 
@@ -10,7 +8,7 @@ Must/Should/Could labels refer to the unchanged [functional requirements](functi
 
 [Full-size SVG](../../assets/diagrams/use-case-general.svg) · [PlantUML source](../../assets/diagrams/source/use-case-general.puml)
 
-Customer, Waiter, and Manager are human roles. Payment Provider and Restaurant/POS are external actors. The boundary encloses Tabiora responsibilities, not restaurant food preparation or provider internals. The overview groups capabilities; the diagrams below provide detail rather than UML inheritance between diagrams.
+Customer, Waiter, and Manager act within Tabiora's workflows. Payment Provider and Restaurant/POS are external actors. The focused views expand the same system boundary.
 
 ## Customer use-case diagram
 
@@ -18,7 +16,7 @@ Customer, Waiter, and Manager are human roles. Payment Provider and Restaurant/P
 
 [Full-size SVG](../../assets/diagrams/use-case-customer.svg) · [PlantUML source](../../assets/diagrams/source/use-case-customer.puml)
 
-Reserve a table includes the necessary availability check. Merely displaying a floor plan is not confirmation. No include/extend relationship is used to imply temporal ordering, optional scope, or navigation. Blue marks recorded capabilities and amber marks proposed workflow details or later scope; written labels preserve meaning without color. Should/Could capabilities remain visibly separate from the Must Have visit flow.
+Table reservation includes availability checking. Blue marks recorded capabilities, and amber marks proposed detail or later scope. Labels also distinguish Must Have, Should Have, and Could Have.
 
 ## Waiter use-case diagram
 
@@ -26,7 +24,7 @@ Reserve a table includes the necessary availability check. Merely displaying a f
 
 [Full-size SVG](../../assets/diagrams/use-case-waiter.svg) · [PlantUML source](../../assets/diagrams/source/use-case-waiter.puml)
 
-Receiving calls is recorded staff scope. Acknowledging/resolving calls and reading relevant pre-orders are proposed refinements. P-STAFF grants no menu editing, reservation management, payment-result editing, or cross-restaurant access to Waiter.
+FR-014 covers notification receipt. Call handling and context-only pre-order read access follow P-CALL and P-STAFF.
 
 ## Manager use-case diagram
 
@@ -34,11 +32,11 @@ Receiving calls is recorded staff scope. Acknowledging/resolving calls and readi
 
 [Full-size SVG](../../assets/diagrams/use-case-manager.svg) · [PlantUML source](../../assets/diagrams/source/use-case-manager.puml)
 
-FR-012/FR-013 require staff management capabilities; assigning these to Manager is P-STAFF. Availability changes depend on booking authority D-02. Menu editing is a candidate capability subject to D-10, not a requirement inferred from viewing menus. Blacklist management remains excluded (FR-027).
+FR-012/FR-013 require staff management. P-STAFF allocates it to Manager. Availability changes depend on D-02, menu editing is a D-10 candidate, and FR-027 remains excluded.
 
 ## Detailed use-case specifications
 
-The following main flows are intended design specifications. Where a flow chooses a lifecycle, permission, or failure policy beyond the baseline, its proposal is named explicitly. Targets, deadlines, and business rules that remain TBD cannot be treated as agreed acceptance criteria.
+Flows name the proposals they use. Open targets, deadlines, and business rules remain TBD.
 
 ### UC-01 — Discover a restaurant
 
@@ -118,7 +116,7 @@ The following main flows are intended design specifications. Where a flow choose
 | Postconditions | The customer sees the known payment outcome. A successful pre-order payment is not assumed to settle any later restaurant bill. |
 | Related requirements | FR-011; NFR-005, NFR-008; AC-002, AC-005 |
 
-This is a baseline scenario with unresolved bill details. The focused payment sequence models UC-03, not a complete bill-settlement integration.
+Bill contract details remain open. The [payment sequence](../architecture/sequence-diagram.md#payment-initiation-and-outcomes) covers UC-03.
 
 ### UC-07 — Modify a reservation or pre-order
 
@@ -146,6 +144,6 @@ This is a baseline scenario with unresolved bill details. The focused payment se
 
 ## Source-linked PNG export
 
-The [use-case PNG](../../assets/diagrams/restaurant-service-use-case-diagram.png) is regenerated from the [general use-case source](../../assets/diagrams/source/use-case-general.puml), replacing the earlier image-only export. The four diagrams above are the maintained views; no lost-source historical image is presented as an active specification. Blacklist management is excluded initially (FR-027).
+The [use-case PNG](../../assets/diagrams/restaurant-service-use-case-diagram.png) shares the [general use-case source](../../assets/diagrams/source/use-case-general.puml).
 
 [Architecture and UML](../architecture/README.md) · [Class models](../architecture/class-diagram.md)

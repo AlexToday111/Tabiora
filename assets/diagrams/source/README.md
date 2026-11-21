@@ -1,10 +1,6 @@
 # Diagram Sources
 
-Status: **Proposed design.** The sources model the recorded requirements plus explicitly labelled design proposals. They are not executable application functionality.
-
 ## Files
-
-The Architecture Map and 12 UML SVGs have matching editable sources in this directory. Paths are relative to this guide.
 
 | View | Source | Rendering |
 | --- | --- | --- |
@@ -22,24 +18,20 @@ The Architecture Map and 12 UML SVGs have matching editable sources in this dire
 | Payment outcomes | [payment-sequence.puml](payment-sequence.puml) | [payment-sequence.svg](../payment-sequence.svg) |
 | Waiter call | [waiter-call-sequence.puml](waiter-call-sequence.puml) | [waiter-call-sequence.svg](../waiter-call-sequence.svg) |
 
-Use-case explanations are in [use-cases.md](../../../docs/requirements/use-cases.md); class/interaction explanations and traceability are in the [architecture index](../../../docs/architecture/README.md).
+The [architecture index](../../../docs/architecture/README.md) and [use cases](../../../docs/requirements/use-cases.md) explain the views. The [archived draw.io workspace](DineFlow-Architecture-Workspace.drawio) retains its original labels.
 
-The twelve focused UML views above replace the earlier combined models. The [archived draw.io workspace](DineFlow-Architecture-Workspace.drawio) retains its original labels. The dedicated [Architecture Map](../../../docs/architecture/architecture-map.md) and the PlantUML files are the maintained sources.
-
-The two pre-existing image-only PNG exports are now regenerated from canonical editable sources:
+PNG exports share the following sources.
 
 | PNG rendering | Maintained source |
 | --- | --- |
 | [restaurant-service-class-diagram.png](../restaurant-service-class-diagram.png) | [class-diagram.puml](class-diagram.puml) |
 | [restaurant-service-use-case-diagram.png](../restaurant-service-use-case-diagram.png) | [use-case-general.puml](use-case-general.puml) |
 
-These current exports replace the former image-only snapshots. Every published diagram format has a source link; SVG is the primary scalable rendering.
-
 ## Rendering
 
 For the Architecture Map, open the dedicated `.drawio` file in draw.io and use [File → Export As → SVG](https://www.drawio.com/docs/manual/export/export-to-svg/). Export the full page content in light appearance and check the labels, connectors, and legend in the SVG.
 
-The UML SVGs are generated locally using Java 21 and PlantUML 1.2025.2. Class sources explicitly select Smetana layout. Use-case diagrams use the available Graphviz 2.44.1 layout, which correctly attaches actor associations to the use-case boundaries. Sequence layout is handled by PlantUML. From the repository root, set the JAR path to its location on your machine:
+Use Java 21 and PlantUML 1.2025.2 from the repository root. Classes use Smetana, use cases use Graphviz 2.44.1, and sequences use PlantUML layout.
 
 ```powershell
 $plantUmlJar = 'C:/path/to/plantuml-1.2025.2.jar'
@@ -47,7 +39,7 @@ java -jar $plantUmlJar -charset UTF-8 -checkonly 'assets/diagrams/source/*.puml'
 java -jar $plantUmlJar -charset UTF-8 -tsvg -o .. 'assets/diagrams/source/*.puml'
 ```
 
-Run `java -jar $plantUmlJar -testdot` to check Graphviz availability before rendering use cases. The JAR and Graphviz binary are not stored in the repository. The output directory is relative to each source, so SVGs are written to the existing `assets/diagrams/` directory. No external diagram-hosting service is needed.
+Run `java -jar $plantUmlJar -testdot` before rendering use cases. PlantUML resolves `-o ..` relative to each source and writes the SVGs to `assets/diagrams/`. The JAR and Graphviz binary are external to the repository.
 
 To refresh the two PNG formats, render the canonical files into a temporary preview directory and copy the results to the existing PNG filenames:
 
@@ -61,14 +53,9 @@ Copy-Item -LiteralPath (Join-Path $diagramPreviewDir 'use-case-general.png') -De
 
 ## Update workflow
 
-1. Edit the corresponding PlantUML or draw.io source and identify affected FR/NFR/AC IDs and P-/D-IDs.
-2. Preserve recorded priorities. Mark new policies as proposals until a decision record establishes approval.
-3. Validate syntax and regenerate the corresponding SVG.
-4. Visually inspect labels, multiplicities, branch conditions, and line crossings at readable zoom.
-5. Review related prose/use cases and other diagrams for consistent names, service operations, permissions, and states.
-6. Check all local document/source/image links and record validation limitations.
-7. Commit source, SVG, and existing documentation changes together when requested.
+1. Edit the source. Trace affected FR/NFR/AC and P-/D-IDs and preserve requirement priorities.
+2. Validate syntax, regenerate the export, and inspect labels, connectors, multiplicities, and branch conditions.
+3. Check prose, terminology, state labels, and local links together. Record any validation limits.
+4. When requested, commit the source, export, and documentation together.
 
-Use ordinary associations unless lifetime ownership is meaningful; use composition for pre-order-owned items. Use include only for required sub-behavior, not page navigation or diagram hierarchy. Sequence fragments represent conditions/repetition, not approved retry counts. State definitions belong to the [proposed lifecycle model](../../../docs/requirements/functional-requirements.md#proposed-lifecycle-model).
-
-[Back to architecture and UML](../../../docs/architecture/README.md)
+Use composition for owned elements such as pre-order items. Use include for required sub-behavior. Sequence loops show repetition. Retry limits and state definitions belong to the [proposed lifecycle model](../../../docs/requirements/functional-requirements.md#proposed-lifecycle-model) and [decision register](../../../docs/requirements/open-questions.md).
