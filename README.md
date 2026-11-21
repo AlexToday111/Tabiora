@@ -1,12 +1,14 @@
-# DineFlow
+<p align="center">
+  <img src="assets/images/tabiora-header.png" alt="Tabiora" width="640">
+</p>
 
-A planned restaurant platform that helps customers choose a restaurant, reserve a table, pre-order dishes, request waiter assistance, and pay by phone.
+Tabiora is a planned restaurant platform that helps customers choose a restaurant, reserve a table, pre-order dishes, request waiter assistance, and pay by phone.
 
 **Project status: Design and documentation.** This repository contains a Software Engineering specification and proposed UML models. It does not contain an implemented application or claim completed integrations.
 
 ## Problem
 
-Planning a restaurant visit can involve uncertain table availability and waiting. During the visit, customers may struggle to find a waiter or settle the bill promptly. DineFlow connects visit planning with restaurant staff workflows through a smartphone-accessible experience.
+Planning a restaurant visit can involve uncertain table availability and waiting. During the visit, customers may struggle to find a waiter or settle the bill promptly. Tabiora connects visit planning with restaurant staff workflows through a smartphone-accessible experience.
 
 ## Main user roles
 
@@ -67,6 +69,7 @@ docs/
   architecture/               UML index, class models, interaction explanations
   development/                Planned lifecycle and methodology
 assets/
+  images/                     README images
   diagrams/                   Current SVGs and source-linked PNG exports
     source/                   Editable PlantUML sources and rendering guide
 ```
