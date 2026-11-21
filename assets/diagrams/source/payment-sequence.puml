@@ -1,5 +1,5 @@
 @startuml
-title DineFlow - Payment Confirmation and Late Outcomes
+title Tabiora - Payment Confirmation and Late Outcomes
 skinparam shadowing false
 skinparam defaultFontName SansSerif
 skinparam defaultFontSize 13

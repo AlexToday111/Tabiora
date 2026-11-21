@@ -2,7 +2,7 @@
 
 Status: **Planned approach.** No completed prototype, Sprint, or production implementation is claimed.
 
-**Project:** DineFlow / Restaurant Service System
+**Project:** Tabiora / Restaurant Service System
 
 **Lifecycle approach:** Iterative prototyping and incremental development within Scrum
 
@@ -10,7 +10,7 @@ Status: **Planned approach.** No completed prototype, Sprint, or production impl
 
 **Team:** Three developers and one tester, studying in their third year
 
-## Why this approach fits DineFlow
+## Why this approach fits Tabiora
 
 The floor plan, table/time selection, pre-order checkout, and staff call queue need user validation. Booking ownership, payment recovery, and staff permissions remain unresolved. Rapid Prototyping lets the team test those interactions with representative customers, waiters, and managers before implementing integrations.
 

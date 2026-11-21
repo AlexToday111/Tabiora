@@ -17,7 +17,7 @@ The starting point was the customer's planned restaurant visit, not a list of UM
 
 Only after this domain decomposition are coordinating responsibilities assigned to BookingService, OrderService, PaymentService and CallService. Their operations correspond to the sequence messages. Interfaces are introduced where the workflow needs an authoritative booking decision, verified provider result, restaurant acknowledgement or notification receipt.
 
-This is DineFlow's top-down reasoning: workflow responsibility → domain facts and lifecycles → coordinating operations → external contracts. It does not claim that a class diagram proves implementation correctness. Artificial in/out/inout demonstration operations were removed; each retained operation serves a documented scenario.
+This is Tabiora's top-down reasoning: workflow responsibility → domain facts and lifecycles → coordinating operations → external contracts. It does not claim that a class diagram proves implementation correctness. Artificial in/out/inout demonstration operations were removed; each retained operation serves a documented scenario.
 
 ## General domain model
 
@@ -37,7 +37,7 @@ Restaurant offers menu items through its menu; the ordering view details that pa
 
 Customer makes reservations for RestaurantTable; FloorPlan displays the restaurant's tables. These are ordinary associations because deletion/lifetime ownership is not established. Table capacity is an input to proposed validation, not a global availability Boolean. Availability depends on interval and authoritative reservations.
 
-BookingService coordinates preview, booking creation, proposed changes, and delivery recording. BookingAuthority provides preview and atomic create-if-available; the authority may be DineFlow or restaurant-side (D-02). This contract expresses NFR-004 without choosing locks, a database, or a distributed protocol. changeReservation represents Should Have FR-020; its authority/update contract and deadline remain D-03.
+BookingService coordinates preview, booking creation, proposed changes, and delivery recording. BookingAuthority provides preview and atomic create-if-available; the authority may be Tabiora or restaurant-side (D-02). This contract expresses NFR-004 without choosing locks, a database, or a distributed protocol. changeReservation represents Should Have FR-020; its authority/update contract and deadline remain D-03.
 
 Reservation uses P-BOOK states, with separate P-INTEGRATION delivery status. P-BOOK now proposes cancellation as a separate operation and expiry at the booked end. A confirmed reservation blocks only its finite interval; leaving optional checkout does not silently cancel the visit. Cancellation eligibility and any alternative hold policy still need approval.
 
@@ -77,7 +77,7 @@ Menu/availability change operations are clearly candidate proposals; no existing
 
 ## Contract and result interpretation
 
-Identifier and DateTime are logical types, not chosen libraries. AvailabilityResult distinguishes available, unavailable, invalid input, and source unavailable. BookingResult carries either a confirmed reservation reference or conflict/invalid/source-unavailable outcome. ProviderResult distinguishes verified success, verified rejection, and no verified terminal result. DeliveryResult establishes recipient acknowledgement/receipt or a failure to establish delivery. FulfilmentDecision distinguishes eligible PAID from REVIEW_REQUIRED after verified success. cancelUnpaid/expireUnpaid require no unresolved or successful attempt; reviewUnresolved preserves the provider reference when eligibility closes. Exact protocol/error-code formats remain TBD.
+Identifier and DateTime are logical types, not chosen libraries. AvailabilityResult distinguishes an available or unavailable table, `INVALID` input, and `SOURCE_UNAVAILABLE` when an authoritative preview cannot be obtained. BookingResult carries `CONFIRMED` with a reservation reference, `CONFLICT` for overlap, `INVALID` for invalid input, or `SOURCE_UNAVAILABLE` when the authoritative booking outcome cannot be obtained. ProviderResult distinguishes verified success, verified rejection, and no verified terminal result. DeliveryResult establishes recipient acknowledgement/receipt or a failure to establish delivery. FulfilmentDecision distinguishes eligible PAID from REVIEW_REQUIRED after verified success. cancelUnpaid/expireUnpaid require no unresolved or successful attempt; reviewUnresolved preserves the provider reference when eligibility closes. Exact protocol/error-code formats remain TBD.
 
 The same service/interface operation names appear in the [sequence diagrams](sequence-diagram.md). Supporting validation inside an operation is described by notes, rather than pretending that every validation step is a separate deployed component.
 

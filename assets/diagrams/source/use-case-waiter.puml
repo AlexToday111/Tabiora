@@ -1,5 +1,5 @@
 @startuml
-title DineFlow - Waiter Use Cases
+title Tabiora - Waiter Use Cases
 skinparam shadowing false
 skinparam defaultFontName SansSerif
 skinparam defaultFontSize 13
@@ -11,7 +11,7 @@ skinparam usecaseBorderColor #3D5368
 
 left to right direction
 actor Waiter
-rectangle "DineFlow - Waiter" {
+rectangle "Tabiora - Waiter" {
  usecase "Receive waiter-call notification\nFR-014; Must" as Receive
  usecase "Acknowledge a call\nP-CALL; proposed" as Ack #FFF4D6
  usecase "Resolve a call\nP-CALL; proposed" as Resolve #FFF4D6

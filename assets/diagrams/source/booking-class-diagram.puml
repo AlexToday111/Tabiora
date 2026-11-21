@@ -1,6 +1,6 @@
 @startuml
 !pragma layout smetana
-title DineFlow - Booking and Reservation
+title Tabiora - Booking and Reservation
 skinparam shadowing false
 skinparam defaultFontName SansSerif
 skinparam defaultFontSize 13
@@ -73,6 +73,6 @@ legend bottom
 Proposed design: P-BOOK, P-INTEGRATION.
 FR-004-FR-005, FR-009, FR-012; NFR-004; AC-001, AC-004-AC-006.
 changeReservation is Should Have FR-020; deadline remains TBD.
-BookingResult includes reservation reference or conflict / invalid / source-unavailable outcome.
+BookingResult: CONFIRMED + reservation / CONFLICT / INVALID / SOURCE_UNAVAILABLE.
 endlegend
 @enduml

@@ -1,6 +1,6 @@
 @startuml
 !pragma layout smetana
-title DineFlow - General Domain Model
+title Tabiora - General Domain Model
 skinparam shadowing false
 skinparam defaultFontName SansSerif
 skinparam defaultFontSize 13

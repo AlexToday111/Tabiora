@@ -53,7 +53,7 @@ Baseline IDs and priorities above are unchanged. The following is a verification
 
 | ID | Measurement or verification method | Open parameters |
 | --- | --- | --- |
-| NFR-001 | Measure from receipt of a valid reservation request at the DineFlow boundary to the definitive success/conflict/error response. Report each outcome separately, including authoritative integration time. | Maximum time, percentile, workload, dataset, network profile, and treatment of invalid requests: TBD |
+| NFR-001 | Measure from receipt of a valid reservation request at the Tabiora boundary to the definitive success/conflict/error response. Report each outcome separately, including authoritative integration time. | Maximum time, percentile, workload, dataset, network profile, and treatment of invalid requests: TBD |
 | NFR-002 | Correlate call creation with receipt at the agreed staff endpoint. Record dispatch time, endpoint receipt, and human acknowledgement separately; include routing/retry time in end-to-end delivery measurements. | Delivery endpoint, maximum time, recipient policy, and offline behavior: TBD |
 | NFR-003 | Define monitored booking/payment probes and report successful service time over the agreed observation window, separately identifying scheduled maintenance and external outages. Never equate an unknown payment with success. | Numerical availability target, maintenance notice/windows, probe cadence, and provider-outage treatment: TBD |
 | NFR-004 | Submit simultaneous overlapping requests for one table; assert at most one CONFIRMED reservation. Repeat through every channel using the same authoritative booking source. Test rescheduling against existing bookings and verify no partial mutation on failure under P-BOOK. | Adjacent-interval/buffer policy and load profile: TBD; cross-channel guarantee depends on D-02 |
@@ -70,7 +70,7 @@ Baseline IDs and priorities above are unchanged. The following is a verification
 
 These are design-validation cases for P-BOOK, P-PAY, P-CALL, and P-INTEGRATION, not approved numerical service levels.
 
-- Inject authoritative booking-source failure: return an explicit unavailable outcome, never optimistic booking success.
+- Inject authoritative booking-source failure: return `SOURCE_UNAVAILABLE` when no authoritative result can be obtained. Require authoritative evidence before reporting booking success.
 - Inject a payment timeout and duplicate/out-of-order results: retain UNKNOWN until verified reconciliation, apply success once, and never regress SUCCEEDED.
 - Inject restaurant delivery failure after booking/payment success: preserve domain status and expose a separate failed delivery for staff follow-up.
 - Inject staff endpoint failure: retain the waiter call with DELIVERY_FAILED; a customer-facing acceptance message must not claim a waiter has received it.
@@ -92,9 +92,9 @@ In NFR-007, "supported" means a documented, agreed platform/browser/version matr
 
 The proposed matrix must verify touch-based restaurant discovery, readable table selection, menu use, booking, checkout/cancel/abandon outcomes, waiter calls, and bill payment without clipped controls or unusable error messages. Record the exact device/browser versions and task results. Until that matrix is agreed, full device-compatibility compliance cannot be claimed.
 
-## Quality attributes in DineFlow
+## Quality attributes in Tabiora
 
-| Attribute | DineFlow-specific meaning | Verification evidence |
+| Attribute | Tabiora-specific meaning | Verification evidence |
 | --- | --- | --- |
 | Performance | Response and notification times at the boundaries defined above, under an explicit workload | Outcome-aware latency distributions; thresholds and percentile remain TBD |
 | Reliability | No conflicting confirmed booking, truthful payment outcomes, recoverable handoff, and bounded abandoned checkout lifecycle | Concurrency, timeout, late-result, cancellation-race, and failure-injection scenarios under P-BOOK/P-PAY |

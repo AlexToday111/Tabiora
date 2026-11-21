@@ -1,5 +1,5 @@
 @startuml
-title DineFlow - Customer Use Cases
+title Tabiora - Customer Use Cases
 skinparam shadowing false
 skinparam defaultFontName SansSerif
 skinparam defaultFontSize 13
@@ -12,7 +12,7 @@ skinparam usecaseBorderColor #3D5368
 left to right direction
 actor Customer
 actor "Payment Provider" as Provider
-rectangle "DineFlow - Customer" {
+rectangle "Tabiora - Customer" {
  package "Must Have: discovery" {
   usecase "Search / filter restaurants\nFR-001-FR-002" as Search
   usecase "View restaurant information\nFR-003" as Info

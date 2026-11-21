@@ -10,13 +10,13 @@ FR-008 covers pre-order prepayment. FR-011 separately requires payment of the re
 
 ## Decision
 
-- **Verified payment.** `PaymentService` initiates, verifies, and queries through `PaymentProviderPort`. Carry a stable attempt reference and use it for provider idempotency where supported. Keep provider references and necessary metadata. Raw card handling stays with the external Payment Provider. Only a verified terminal result can establish `SUCCEEDED` or `FAILED`. A timeout or missing trustworthy terminal result yields `UNKNOWN`. Reconcile that attempt before allowing a fresh one. Duplicate or out-of-order results may resume unfinished work but must preserve `SUCCEEDED` and avoid duplicate effects.
+- **Verified payment.** `PaymentService` initiates, verifies, and queries through `PaymentProviderPort`. Carry a stable attempt reference and use it for provider idempotency where supported. Keep provider references and necessary metadata. Raw card handling stays with the external Payment Provider. Only a verified terminal result can establish `SUCCEEDED` or `FAILED`. A timeout or missing trustworthy terminal result yields `UNKNOWN`. Reconcile that attempt through `PaymentService` before allowing a fresh one. Duplicate or out-of-order results may resume unfinished work but must preserve `SUCCEEDED` and avoid duplicate effects.
 - **Pre-order eligibility.** Recheck the quote, order, and reservation at initiation and check current eligibility when applying the result. A late verified success for an ineligible order or visit records `Payment.SUCCEEDED` and routes the `PreOrder` to `REVIEW_REQUIRED`. The booking lifecycle continues independently. There is no automatic rebooking, fulfilment, or refund. FR-011 and UC-06 retain a separate bill workflow.
 - **Restaurant handoff.** Track confirmed reservations and eligible paid pre-orders through `POSIntegration` with independent `PENDING`, `DELIVERED`, and `FAILED` states. A successful send leaves acknowledgement pending. Verify any partner response against the agreed acknowledgement contract before recording `DELIVERED`. Retain the original business reference for recovery. A durable outbox and retry worker are candidate mechanisms. `StaffNotifier` receipt and human waiter acknowledgement follow P-CALL separately.
 
 ## Alternatives
 
-- **Handle card details inside DineFlow.** Gives more control over processing and expands sensitive data handling beyond the boundary recommended by AC-002.
+- **Handle card details inside Tabiora.** Gives more control over processing and expands sensitive data handling beyond the boundary recommended by AC-002.
 - **Use a synchronous payment-to-POS chain and mark delivery on send.** Simplifies the happy path, but external downtime can obscure which action succeeded and cause duplicate or lost effects on retry.
 
 ## Consequences

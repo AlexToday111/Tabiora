@@ -19,7 +19,7 @@ Each Q-ID covers one information need. Questions are reworded and split from the
 | Q-07 | Reservations | How many reservation requests are expected per day? | Open | D-08 |
 | Q-08 | Orders | How many pre-orders are expected per day? | Open | D-08 |
 | Q-09 | Peaks | What demand is expected during the busiest periods? | Open | D-08 |
-| Q-10 | Launch | When should the first version of DineFlow launch? | Open | D-01 |
+| Q-10 | Launch | When should the first version of Tabiora launch? | Open | D-01 |
 | Q-11 | Budget | What budget is available for the project? | Open | D-01 |
 | Q-12 | Release approach | How should functionality be introduced over successive releases? | Open | D-01 |
 | Q-13 | MVP validation | Which recorded capabilities are essential for the first usable release? | Open | D-01 |
@@ -29,10 +29,10 @@ Each Q-ID covers one information need. Questions are reworded and split from the
 
 | ID | Topic | Question | Status | Decision area |
 | --- | --- | --- | --- | --- |
-| Q-15 | Operations | Which restaurant operations should DineFlow support? | Open | D-02 |
-| Q-16 | Existing software | Which existing restaurant systems must DineFlow connect to? | Open | D-02 |
+| Q-15 | Operations | Which restaurant operations should Tabiora support? | Open | D-02 |
+| Q-16 | Existing software | Which existing restaurant systems must Tabiora connect to? | Open | D-02 |
 | Q-17 | Staff interface | What separate management interface, if any, does the restaurant need? | Open | D-02 |
-| Q-18 | Accounting scope | What accounting functionality, if any, is expected from DineFlow? | Open | D-02 |
+| Q-18 | Accounting scope | What accounting functionality, if any, is expected from Tabiora? | Open | D-02 |
 | Q-19 | Payment services | Which payment-related services are expected? | Open | D-04 |
 | Q-20 | Booking ownership | Which system should decide whether a table can be booked? | Open | D-02 |
 | Q-21 | Menu ownership | Who maintains restaurant and menu information? | Open | D-10 |
@@ -126,7 +126,7 @@ State labels are owned by the [proposed lifecycle model](functional-requirements
 
 The undefined POSIntegration has an explicit proposed contract. Domain entities, service orchestration, provider results and restaurant delivery are separated. The instructor's role criticism is addressed through restaurant-specific multiple-role assignment, rather than merging Waiter and Manager. Checkout abandonment is distinct from rejection or provider timeout.
 
-The source name Restaurant Service System and repository name DineFlow refer to the same product. Scrum organizes a single backlog/Sprint cycle; prototyping is a validation technique inside that cycle. These documentation/model revisions are not records of stakeholder acceptance.
+Scrum organizes a single backlog/Sprint cycle; prototyping is a validation technique inside that cycle. These documentation/model revisions are not records of stakeholder acceptance.
 
 ## Decision completion rule
 

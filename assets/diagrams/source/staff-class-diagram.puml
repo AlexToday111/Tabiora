@@ -1,6 +1,6 @@
 @startuml
 !pragma layout smetana
-title DineFlow - Staff Memberships and Responsibilities
+title Tabiora - Staff Memberships and Responsibilities
 skinparam shadowing false
 skinparam defaultFontName SansSerif
 skinparam defaultFontSize 13

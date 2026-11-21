@@ -1,5 +1,5 @@
 @startuml
-title DineFlow - Table Reservation
+title Tabiora - Table Reservation
 skinparam shadowing false
 skinparam defaultFontName SansSerif
 skinparam defaultFontSize 13
@@ -15,12 +15,12 @@ participant "POSIntegration" as POS
 note over Booking,Authority
 P-BOOK / P-INTEGRATION: proposed design.
 Start: selected table, interval and guest count.
-Authority may be DineFlow or restaurant-side (D-02).
+Authority may be Tabiora or restaurant-side (D-02).
 end note
 Customer -> Booking : checkAvailability(tableId, start, end, guestCount)
 Booking -> Authority : checkAvailability(tableId, start, end, guestCount)
 Authority --> Booking : preview outcome
-Booking --> Customer : available / unavailable / invalid / source unavailable
+Booking --> Customer : available / table unavailable / INVALID / SOURCE_UNAVAILABLE
 alt Preview available and customer confirms
  Customer -> Booking : createBooking(customerId, tableId, start, end, guestCount)
  critical One authoritative conflict decision and creation
@@ -50,13 +50,16 @@ alt Preview available and customer confirms
   Booking --> Customer : confirmed reservation + delivery status
  else CONFLICT
   Booking --> Customer : no reservation created; choose another interval/table
- else INVALID / SOURCE_UNAVAILABLE
-  Booking --> Customer : no reservation created; correct input / service unavailable
+ else INVALID
+  Booking --> Customer : no reservation created; correct input
+ else SOURCE_UNAVAILABLE
+  Booking --> Customer : authoritative result unknown; confirmation unestablished
+  note over Booking,Authority : Verify uncertain writes at the authority.
  end
-else Preview unavailable, invalid, or source unavailable
+else Table unavailable / INVALID / SOURCE_UNAVAILABLE
  note over Customer,Booking : Explain outcome; no booking success is claimed.
 end
-note over Customer,Booking : End of booking request: confirmed finite reservation or explicit failure.
+note over Customer,Booking : End of request: confirmed reservation, rejection, or uncertain authority result.
 opt Later lifecycle: confirmed visit reaches its booked end (P-BOOK)
  Booking -> Booking : expireReservation(reservationId)
  note over Booking : EXPIRED; interval no longer blocks the table.

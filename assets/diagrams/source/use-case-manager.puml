@@ -1,5 +1,5 @@
 @startuml
-title DineFlow - Manager Use Cases
+title Tabiora - Manager Use Cases
 skinparam shadowing false
 skinparam defaultFontName SansSerif
 skinparam defaultFontSize 13
@@ -12,7 +12,7 @@ skinparam usecaseBorderColor #3D5368
 left to right direction
 actor Manager
 actor "Restaurant/POS" as POS
-rectangle "DineFlow - Manager" {
+rectangle "Tabiora - Manager" {
  usecase "View / manage reservations\nFR-012; Must staff capability" as Reservations
  usecase "View / manage incoming pre-orders\nFR-013; Must staff capability" as Orders
  usecase "Request table-availability change\nP-STAFF; proposed" as Availability #FFF4D6

@@ -6,11 +6,11 @@ Must/Should/Could labels refer to the unchanged [functional requirements](functi
 
 ## General use-case diagram
 
-![General DineFlow use cases](../../assets/diagrams/use-case-general.svg)
+![General Tabiora use cases](../../assets/diagrams/use-case-general.svg)
 
 [Full-size SVG](../../assets/diagrams/use-case-general.svg) · [PlantUML source](../../assets/diagrams/source/use-case-general.puml)
 
-Customer, Waiter, and Manager are human roles. Payment Provider and Restaurant/POS are external actors. The boundary encloses DineFlow responsibilities, not restaurant food preparation or provider internals. The overview groups capabilities; the diagrams below provide detail rather than UML inheritance between diagrams.
+Customer, Waiter, and Manager are human roles. Payment Provider and Restaurant/POS are external actors. The boundary encloses Tabiora responsibilities, not restaurant food preparation or provider internals. The overview groups capabilities; the diagrams below provide detail rather than UML inheritance between diagrams.
 
 ## Customer use-case diagram
 
@@ -60,8 +60,8 @@ The following main flows are intended design specifications. Where a flow choose
 | Preconditions | A restaurant, table, and interval are selected; the customer reference and source of booking authority are defined for the scenario. P-BOOK proposes valid interval and table-capacity checks. |
 | Trigger | Customer requests confirmation of a selected table and time. |
 | Main flow | 1. Preview availability. 2. Customer confirms the request with guest count. 3. BookingService asks BookingAuthority to atomically validate and create if still available. 4. Return a reservation reference and CONFIRMED under P-BOOK. 5. Deliver confirmed information to the restaurant and separately record its acknowledgement/delivery failure under P-INTEGRATION. |
-| Alternative flows | Invalid interval/capacity: reject without creating a reservation (proposed validation). Preview unavailable: choose another option. Concurrent winner: return CONFLICT without a second booking. Authority unavailable: report inability to book. Restaurant handoff failed: retain CONFIRMED with failed delivery and expose the recovery need; retry/escalation remain D-06. |
-| Postconditions | Either one CONFIRMED reservation exists or the request creates none. Confirmation does not depend on optional prepayment under P-BOOK. Failed delivery does not free a booked table; the booked end releases the interval and moves it to EXPIRED under the proposal. |
+| Alternative flows | Invalid interval/capacity: return `INVALID` (proposed validation). Authoritative preview shows table unavailable: choose another option. Concurrent winner: return `CONFLICT` without a second booking. Authority result missing: return `SOURCE_UNAVAILABLE` and leave confirmation unestablished. Restaurant handoff failed: retain `CONFIRMED` with failed delivery and expose the recovery need. Retry and escalation remain D-06. |
+| Postconditions | `CONFIRMED` establishes one reservation. `CONFLICT` and `INVALID` create none. After `SOURCE_UNAVAILABLE`, the authority may still need to resolve whether a write committed. Confirmation does not depend on optional prepayment under P-BOOK. Failed delivery does not free a booked table; the booked end releases the interval and moves it to `EXPIRED` under the proposal. |
 | Related requirements | FR-004–FR-005, FR-009; NFR-001, NFR-004, NFR-008; AC-001, AC-004–AC-006 |
 
 [Reservation sequence](../architecture/sequence-diagram.md#table-reservation)

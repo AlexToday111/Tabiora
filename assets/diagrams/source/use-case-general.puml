@@ -1,5 +1,5 @@
 @startuml
-title DineFlow - General Use Cases
+title Tabiora - General Use Cases
 skinparam shadowing false
 skinparam defaultFontName SansSerif
 skinparam defaultFontSize 13
@@ -15,7 +15,7 @@ actor Waiter
 actor Manager
 actor "Payment Provider" as Provider
 actor "Restaurant/POS" as POS
-rectangle "DineFlow" {
+rectangle "Tabiora" {
  usecase "Discover restaurants\nFR-001-FR-004, FR-006" as Discover
  usecase "Reserve a table\nFR-005" as Book
  usecase "Create a pre-order\nFR-007" as Order

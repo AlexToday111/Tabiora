@@ -1,5 +1,5 @@
 @startuml
-title DineFlow - Waiter Call
+title Tabiora - Waiter Call
 skinparam shadowing false
 skinparam defaultFontName SansSerif
 skinparam defaultFontSize 13

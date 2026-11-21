@@ -17,14 +17,16 @@ Use one coordinated `BookingAuthority` for every channel that can commit a reser
 | `CONFIRMED` | The authority committed the reservation and returned its reference. The finite booking follows P-BOOK independently of checkout or restaurant handoff. |
 | `CONFLICT` | An overlapping reservation prevented the requested commit. |
 | `INVALID` | The authority rejected invalid input. |
-| `SOURCE_UNAVAILABLE` | The authority or its result is unavailable. This is the sequence model's name for the source ADR's `UNAVAILABLE` outcome. Confirmation requires authoritative evidence. |
+| `SOURCE_UNAVAILABLE` | Tabiora cannot obtain an authoritative booking result. The operation may have committed if the reply was lost. Confirmation requires authoritative evidence. |
 
-If DineFlow owns booking, a relational transaction with database-enforced concurrency is a candidate. If Restaurant/POS owns booking, its adapter must rely on an equivalent atomic contract. Verify the chosen authority across participating channels before claiming conflict safety. P-BOOK proposes half-open intervals. Time-zone and buffer policies remain open under D-02/D-03.
+An authoritative preview can report that a table is unavailable for the requested interval. That is a business result. Missing restaurant or table catalogue data follows the discovery flow in UC-01.
+
+If Tabiora owns booking, a relational transaction with database-enforced concurrency is a candidate. If Restaurant/POS owns booking, its adapter must rely on an equivalent atomic contract. Verify the chosen authority across participating channels before claiming conflict safety. P-BOOK proposes half-open intervals. Time-zone and buffer policies remain open under D-02/D-03.
 
 ## Alternatives
 
 - **Read availability, then insert without atomic protection.** Easy to prototype, but both requests can read free capacity and then confirm.
-- **Allow DineFlow and POS to commit independently and synchronize later.** Each channel can continue locally, but reconciliation after the fact can discover two promises for the same table and interval.
+- **Allow Tabiora and POS to commit independently and synchronize later.** Each channel can continue locally, but reconciliation after the fact can discover two promises for the same table and interval.
 
 ## Consequences
 
@@ -33,6 +35,6 @@ If DineFlow owns booking, a relational transaction with database-enforced concur
 
 ## Links / Verification
 
-Run simultaneous overlapping requests for one initially free table and verify at most one confirmed reference. With a healthy authority, competing valid requests that lose receive `CONFLICT`. Cover adjacent intervals under P-BOOK, stale previews, and authority failure without optimistic confirmation. Repeat concurrency tests across DineFlow and POS if POS can take bookings. Use the agreed load and latency criteria when D-08 is resolved.
+Run simultaneous overlapping requests for one initially free table and verify at most one confirmed reference. With a healthy authority, competing valid requests that lose receive `CONFLICT`. Verify `INVALID` for invalid input. Cover adjacent intervals under P-BOOK, stale previews, authority outages, and a lost reply after a possible commit. Assert that an uncertain result returns `SOURCE_UNAVAILABLE` without optimistic confirmation. Repeat concurrency tests across Tabiora and POS if POS can take bookings. Use the agreed load and latency criteria when D-08 is resolved.
 
 [Original Lab 9 ADR-001](https://docs.google.com/document/d/1uYLRcOJxa0YR9Lsh4C2f--5P2zQ14fUCAJ1MeqVXjpA/edit?tab=t.7qbrdid5xjwc#heading=h.tvb5yku6ecgt) · [Architecture Map](../architecture-map.md) · [Booking sequence](../sequence-diagram.md#table-reservation) · [UC-02](../../requirements/use-cases.md#uc-02--reserve-a-table) · [Reliability checks](../../requirements/non-functional-requirements.md#proposed-reliability-checks) · [Lab 11 Test Plan](https://docs.google.com/document/d/1uYLRcOJxa0YR9Lsh4C2f--5P2zQ14fUCAJ1MeqVXjpA/edit?tab=t.r75t8oa0l1gw#heading=h.suljx3hzzq1j)

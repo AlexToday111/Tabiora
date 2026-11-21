@@ -1,5 +1,5 @@
 @startuml
-title DineFlow - Pre-Order Creation and Checkout Exit
+title Tabiora - Pre-Order Creation and Checkout Exit
 skinparam shadowing false
 skinparam defaultFontName SansSerif
 skinparam defaultFontSize 13

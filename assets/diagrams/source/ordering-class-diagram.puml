@@ -1,6 +1,6 @@
 @startuml
 !pragma layout smetana
-title DineFlow - Ordering and Payment
+title Tabiora - Ordering and Payment
 skinparam shadowing false
 skinparam defaultFontName SansSerif
 skinparam defaultFontSize 13

@@ -16,9 +16,9 @@ Status: **Proposed interaction design.** Four scoped scenarios describe intended
 
 [SVG](../../assets/diagrams/sequence-diagram.svg) · [PlantUML](../../assets/diagrams/source/sequence-diagram.puml)
 
-**Start:** customer has selected table, interval and guest count. **End:** one confirmed finite reservation or explicit rejection/conflict/source failure. **Traceability:** UC-02, FR-004–FR-005, FR-009, NFR-004.
+**Start:** customer has selected table, interval and guest count. **End:** a confirmed finite reservation, `CONFLICT`, `INVALID`, or `SOURCE_UNAVAILABLE`. **Traceability:** UC-02, FR-004–FR-005, FR-009, NFR-004.
 
-Preview does not reserve the table. BookingAuthority.createIfAvailable performs one coordinated conflict decision and creation across all booking channels. A competing request can win after preview; the loser receives CONFLICT without another reservation. The critical fragment expresses that invariant, not a selected lock/database.
+Preview is advisory. An authoritative preview can report that a table is unavailable for the interval. `BookingAuthority.createIfAvailable` performs one coordinated conflict decision and creation across all booking channels. A competing request can win after preview. The request that loses receives `CONFLICT`. Invalid booking input returns `INVALID`. If Tabiora cannot obtain an authoritative result, it reports `SOURCE_UNAVAILABLE` and leaves confirmation unestablished. A lost reply may conceal a successful write, so the outcome requires verification at the authority. The critical fragment expresses atomicity without selecting a lock or database.
 
 After success, restaurant handoff is tracked separately. Failed handoff does not free the booking. Under revised P-BOOK, the table is blocked only during its booked interval, and the reservation becomes EXPIRED at its end. This does not introduce a permanent payment-dependent hold. Cancellation is a separate authorized operation; policy remains D-03.
 

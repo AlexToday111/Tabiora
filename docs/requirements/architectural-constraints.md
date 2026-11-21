@@ -20,8 +20,8 @@ These constraints do not select a technology stack or identify specific integrat
 
 | Party | Responsibility in the proposed model | Boundary |
 | --- | --- | --- |
-| DineFlow | Customer/staff interactions, authorization, coordinating booking and ordering, reflecting verified payment state, and tracking restaurant handoff | Does not infer availability, payment success, or delivery success from a sent request alone |
-| Authoritative booking source | Decide whether one table/interval can be reserved and atomically create a booking | DineFlow or a restaurant/POS source: D-02 is open; there must be one coordinated authority for all booking channels |
+| Tabiora | Customer/staff interactions, authorization, coordinating booking and ordering, reflecting verified payment state, and tracking restaurant handoff | Does not infer availability, payment success, or delivery success from a sent request alone |
+| Authoritative booking source | Decide whether one table/interval can be reserved and atomically create a booking | Tabiora or a restaurant/POS source: D-02 is open; there must be one coordinated authority for all booking channels |
 | Restaurant/POS | Supply agreed restaurant-side information and receive confirmed reservations/pre-orders | Data ownership, bill source, acknowledgement, and local staff workflow remain D-02, D-05, D-06, D-10 |
 | External payment provider | Process payment and provide a verifiable result/reference | Recommended by AC-002 and adopted as proposal P-PAY; no vendor, processing protocol, or credential design is selected |
 | Staff notification endpoint | Receive a call notification for the relevant restaurant staff | Delivery evidence and offline/escalation policy remain D-07–D-08 |
@@ -32,7 +32,7 @@ AC-004 requires separate restaurant business entities. The proposed permission c
 
 The logical interfaces in the focused class diagrams express responsibilities, not deployed services or database APIs:
 
-- **BookingAuthority:** preview availability and atomically create a reservation if the table remains available. Its success/conflict/unavailable results support NFR-004. No specific transaction, lock, storage engine, or distributed architecture is chosen.
+- **BookingAuthority:** preview availability and atomically create a reservation if the table remains available. The proposed booking outcomes are `CONFIRMED`, `CONFLICT` for overlap, `INVALID` for invalid input, and `SOURCE_UNAVAILABLE` when an authoritative result cannot be obtained. The contract supports NFR-004. No specific transaction, lock, storage engine, or distributed architecture is chosen.
 - **POSIntegration:** deliver a confirmed reservation or paid pre-order and return acknowledgement/failure. The original undefined interface is replaced by this explicit contract. Booking/table information is read through BookingAuthority in these scenarios; wider synchronization ownership remains open.
 - **PaymentProviderPort:** initiate an attempt, verify a provider result, and query an unresolved result. Business order coordination depends on this contract, rather than making an OrderService implement a POS interface.
 - **StaffNotifier:** notify the relevant restaurant's staff and distinguish endpoint receipt from failure. Human acknowledgement remains a separate call state.
