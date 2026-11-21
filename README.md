@@ -75,3 +75,7 @@ assets/
 ```
 
 See the [diagram source guide](assets/diagrams/source/README.md) for source/image pairs and rendering commands. Current SVGs replace outdated views. The two existing PNGs are regenerated from maintained sources, so no published diagram is image-only.
+
+## About the Author
+
+[Alex Today (@AlexToday111)](https://github.com/AlexToday111) contributed to Tabiora's requirements and UML models.
