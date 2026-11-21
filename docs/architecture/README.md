@@ -4,18 +4,29 @@ Status: **Proposed logical design.** The models support academic review and desi
 
 ## Reading order
 
+Start with [Architecture Baseline v1.0](architecture-baseline.md) and the [Architecture Map](architecture-map.md).
+
 1. [Use cases](../requirements/use-cases.md): product boundary and Customer/Waiter/Manager responsibilities.
 2. [Class models](class-diagram.md): a domain overview, then booking, ordering/payment, and staff operations.
 3. [Sequence diagrams](sequence-diagram.md): table reservation, pre-order/checkout exits, payment outcomes, and waiter calls.
 4. [Architectural constraints](../requirements/architectural-constraints.md): responsibility boundaries and integration recommendations.
 5. [Decision register](../requirements/open-questions.md): approval gaps and alternative policies.
 
+## Architecture decisions and operations
+
+| Document | Status and focus |
+| --- | --- |
+| [ADR-001 Single Authoritative Booking Mechanism](adr/adr-001-authoritative-booking.md) | Proposed atomic booking contract and competing-channel verification |
+| [ADR-002 Verified Payment and Recoverable Restaurant Handoff](adr/adr-002-verified-payment-and-restaurant-handoff.md) | Proposed verified payment, eligibility, and acknowledged handoff |
+| [Deployment & Operational View](deployment-operational-view.md) | Proposed physical boundaries, recovery, observability, and release gates |
+
 ## Diagram index
 
-All 12 current diagrams have editable sources and generated SVGs in the existing asset directories.
+The Architecture Map and all 12 maintained UML views have editable sources and generated SVGs.
 
 | View | Current diagram | Main traceability |
 | --- | --- | --- |
+| Logical architecture | [Architecture Map](architecture-map.md) | FR-001–FR-014, NFR-002, NFR-004–NFR-006, NFR-008, AC-001–AC-006, ADR-001, ADR-002 |
 | Use cases | [General](../requirements/use-cases.md#general-use-case-diagram) | FR-001–FR-026; AC-001, AC-005 |
 | Use cases | [Customer](../requirements/use-cases.md#customer-use-case-diagram) | FR-001–FR-011, FR-015–FR-026 |
 | Use cases | [Waiter](../requirements/use-cases.md#waiter-use-case-diagram) | FR-013–FR-014; P-STAFF/P-CALL |
@@ -62,6 +73,6 @@ Finding restaurant partners is a business activity. Software scalability is demo
 
 The old combined class model and sequence are explicitly replaced at their existing source/SVG filenames by focused current views. Pre-order creation/checkout exits are now separate from provider payment processing. Existing [class PNG](../../assets/diagrams/restaurant-service-class-diagram.png) and [use-case PNG](../../assets/diagrams/restaurant-service-use-case-diagram.png) are regenerated from the current general class/use-case sources. The source guide links each PNG and SVG to its editable source; there are no maintained image-only diagrams.
 
-Edit PlantUML sources, regenerate their SVGs, inspect readability, update affected prose, and check links and requirement/state consistency together. Rendering instructions are in the [source guide](../../assets/diagrams/source/README.md#rendering).
+Edit the corresponding PlantUML or draw.io source, regenerate the SVG, inspect readability, update affected prose, and check links and requirement/state consistency together. Rendering instructions are in the [source guide](../../assets/diagrams/source/README.md#rendering).
 
 [Back to project documentation](../../README.md#documentation)

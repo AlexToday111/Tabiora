@@ -40,7 +40,7 @@ Read the overview, requirements, use cases, class models, and interaction scenar
 | [Non-functional requirements](docs/requirements/non-functional-requirements.md) | NFR baseline and measurement/reliability plan | Numerical targets/workload TBD |
 | [Architectural constraints](docs/requirements/architectural-constraints.md) | Mandatory constraints, recommendations, integration boundaries | Technology/authority decisions open |
 | [Use cases](docs/requirements/use-cases.md) | Four role-based diagrams and UC-01–UC-08 specifications | Recorded capabilities with labelled refinements |
-| [Architecture and UML](docs/architecture/README.md) | General/focused class models and four scoped sequences | Proposed design; 12 editable diagrams |
+| [Architecture and UML](docs/architecture/README.md) | Baseline, Architecture Map, ADRs, deployment view, and 12 editable UML views | Proposed design |
 | [Open stakeholder questions](docs/requirements/open-questions.md) | Decision and proposal register | No new stakeholder approval inferred |
 | [Development approach](docs/development/methodology.md) | Practical Rapid Prototyping/Scrum plan and candidate acceptance/DoD | Planned work |
 
@@ -59,6 +59,9 @@ The [source Google document](https://docs.google.com/document/d/1uYLRcOJxa0YR9Ls
 | Lab 5 — lifecycle and methodology | [Development approach](docs/development/methodology.md) |
 | Lab 6 — class diagram | [Domain overview and focused class models](docs/architecture/class-diagram.md) |
 | Lab 7 — sequence diagram | [Reservation, pre-order/checkout exit, payment, and waiter-call scenarios](docs/architecture/sequence-diagram.md) |
+| Lab 9 — architecture decisions | [ADR-001 and ADR-002](docs/architecture/README.md#architecture-decisions-and-operations) |
+| Lab 10 — system architecture and design | [Architecture Map](docs/architecture/architecture-map.md) |
+| Lab 11 — implementation and testing | [Deployment & Operational View](docs/architecture/deployment-operational-view.md) and planned architecture verification |
 
 ## Repository structure
 
@@ -66,15 +69,15 @@ The [source Google document](https://docs.google.com/document/d/1uYLRcOJxa0YR9Ls
 docs/
   overview.md                 Project context and boundaries
   requirements/               Baseline, acceptance checks, use cases, decisions
-  architecture/               UML index, class models, interaction explanations
+  architecture/               Baseline, map, ADRs, deployment, and UML
   development/                Planned lifecycle and methodology
 assets/
   images/                     README images
   diagrams/                   Current SVGs and source-linked PNG exports
-    source/                   Editable PlantUML sources and rendering guide
+    source/                   Editable PlantUML and draw.io sources and rendering guide
 ```
 
-See the [diagram source guide](assets/diagrams/source/README.md) for source/image pairs and rendering commands. Current SVGs replace outdated views. The two existing PNGs are regenerated from maintained sources, so no published diagram is image-only.
+See the [diagram source guide](assets/diagrams/source/README.md) for source/image pairs and rendering instructions.
 
 ## About the Author
 
