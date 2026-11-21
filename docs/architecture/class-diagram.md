@@ -17,17 +17,17 @@ BookingService, OrderService, PaymentService, and CallService coordinate those w
 
 ## General domain model
 
-![General domain model](../../assets/diagrams/class-diagram.svg)
+![General domain model](../../assets/diagrams/domain-class-diagram/domain-class-diagram.png)
 
-[Full-size SVG](../../assets/diagrams/class-diagram.svg) · [PlantUML](../../assets/diagrams/source/class-diagram.puml)
+[Full-size PNG](../../assets/diagrams/domain-class-diagram/domain-class-diagram.png) · [PlantUML](../../assets/diagrams/domain-class-diagram/domain-class-diagram.puml)
 
 The overview shows visit entities and their relationships. Focused views add attributes and operations. Multiplicities follow the proposals, including one pre-order per reservation under P-PAY.
 
 ## Booking and reservation
 
-![Booking and reservation class model](../../assets/diagrams/booking-class-diagram.svg)
+![Booking and reservation class model](../../assets/diagrams/booking-class-diagram/booking-class-diagram.png)
 
-[Full-size SVG](../../assets/diagrams/booking-class-diagram.svg) · [PlantUML](../../assets/diagrams/source/booking-class-diagram.puml)
+[Full-size PNG](../../assets/diagrams/booking-class-diagram/booking-class-diagram.png) · [PlantUML](../../assets/diagrams/booking-class-diagram/booking-class-diagram.puml)
 
 Customer–Reservation and FloorPlan–RestaurantTable are ordinary associations. Availability depends on the requested interval and authoritative reservations. Capacity is a validation input.
 
@@ -37,9 +37,9 @@ BookingService coordinates previews, creation, changes, and delivery recording. 
 
 ## Ordering and payment
 
-![Ordering and payment class model](../../assets/diagrams/ordering-class-diagram.svg)
+![Ordering and payment class model](../../assets/diagrams/ordering-class-diagram/ordering-class-diagram.png)
 
-[Full-size SVG](../../assets/diagrams/ordering-class-diagram.svg) · [PlantUML](../../assets/diagrams/source/ordering-class-diagram.puml)
+[Full-size PNG](../../assets/diagrams/ordering-class-diagram/ordering-class-diagram.png) · [PlantUML](../../assets/diagrams/ordering-class-diagram/ordering-class-diagram.puml)
 
 PreOrder owns OrderItems by composition. Drafts may be empty. Submission requires a valid item under P-PAY. An OrderItem references MenuItem and snapshots its quoted unit price. Menu–MenuItem remains an ordinary association.
 
@@ -49,9 +49,9 @@ OrderService validates items, quotes, tracks order state, and coordinates handof
 
 ## Restaurant staff and operations
 
-![Staff and operations class model](../../assets/diagrams/staff-class-diagram.svg)
+![Staff and operations class model](../../assets/diagrams/staff-class-diagram/staff-class-diagram.png)
 
-[Full-size SVG](../../assets/diagrams/staff-class-diagram.svg) · [PlantUML](../../assets/diagrams/source/staff-class-diagram.puml)
+[Full-size PNG](../../assets/diagrams/staff-class-diagram/staff-class-diagram.png) · [PlantUML](../../assets/diagrams/staff-class-diagram/staff-class-diagram.puml)
 
 Customer specializes User. RestaurantStaff links a person to a restaurant and its assigned StaffRole set. WAITER and MANAGER are roles on the membership. The [permission matrix](../requirements/functional-requirements.md#proposed-staff-permissions) defines their scopes and candidate actions.
 
@@ -76,7 +76,5 @@ Identifier and DateTime are logical types. Protocol and error formats remain TBD
 ## Review notes
 
 Loyalty, tax/discount algorithms, and generic login operations remain deferred under D-13. See the [decision register](../requirements/open-questions.md) for remaining contract and policy choices.
-
-The [class PNG export](../../assets/diagrams/restaurant-service-class-diagram.png) shares the [general model source](../../assets/diagrams/source/class-diagram.puml).
 
 [Back to architecture and UML](README.md)

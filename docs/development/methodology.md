@@ -56,7 +56,7 @@ For a documentation/prototype item:
 - Related requirements, main flow, and failure behavior are traceable.
 - Proposed rules and unresolved decisions are labelled; no stakeholder approval is inferred from a demonstration.
 - A peer has reviewed consistency across prose, use cases, class models, and sequences.
-- UML sources render, SVGs have been visually inspected, and local links resolve.
+- UML sources render, PNGs have been visually inspected, and local links resolve.
 - Prototype acceptance cases have results recorded, including conflicts and access failures where relevant.
 
 For a future implementation item, additionally require reviewed code, meaningful behavior/security checks, relevant integration evidence, and verified recovery behavior. Simulated integrations and unagreed performance thresholds must be reported as limitations. This Definition of Done is proposed and has not yet been adopted by the team.

@@ -38,6 +38,7 @@ The [coursework in Google Docs](https://docs.google.com/document/d/1uYLRcOJxa0YR
 | Lab 5 — lifecycle and methodology | [Development approach](docs/development/methodology.md) |
 | Lab 6 — class diagram | [Domain overview and focused class models](docs/architecture/class-diagram.md) |
 | Lab 7 — sequence diagram | [Reservation, pre-order/checkout exit, payment, and waiter-call scenarios](docs/architecture/sequence-diagram.md) |
+| Lab 8 — state diagrams | [PreOrder, Payment, and WaiterCall](assets/diagrams/README.md#state-diagrams) |
 | Lab 9 — architecture decisions | [ADR-001 and ADR-002](docs/architecture/README.md#architecture-decisions-and-operations) |
 | Lab 10 — system architecture and design | [Architecture Map](docs/architecture/architecture-map.md) |
 | Lab 11 — implementation and testing | [Deployment & Operational View](docs/architecture/deployment-operational-view.md) and planned architecture verification |
@@ -52,11 +53,10 @@ docs/
   development/                Planned lifecycle and methodology
 assets/
   images/                     README images
-  diagrams/                   Current SVGs and source-linked PNG exports
-    source/                   Editable PlantUML and draw.io sources and rendering guide
+  diagrams/                   One folder per diagram, with an editable source and PNG
 ```
 
-See the [diagram source guide](assets/diagrams/source/README.md) for source/image pairs and rendering instructions.
+See the [diagram source guide](assets/diagrams/README.md) for source/image pairs and rendering instructions.
 
 ## About the Author
 

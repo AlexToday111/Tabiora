@@ -2,11 +2,11 @@
 
 **Proposed logical design.** The pilot groups the API, core modules, and integration adapters in one backend deployable. [Deployment & Operational View](deployment-operational-view.md#why-a-modular-monolith-for-the-pilot) · [Editable Lab 10 map](https://drive.google.com/file/d/1uazruv4TbqWrvL1MU_owLgO34Xjf3RWy/view)
 
-![Tabiora Architecture Map showing the Tabiora boundary, logical modules, external systems, and legend](../../assets/diagrams/dineflow-architecture-map.svg)
+![Tabiora Architecture Map showing the Tabiora boundary, logical modules, external systems, and legend](../../assets/diagrams/architecture-map/architecture-map.png)
 
-[Editable draw.io source](../../assets/diagrams/source/dineflow-architecture-map.drawio) · [Full-size SVG](../../assets/diagrams/dineflow-architecture-map.svg)
+[Editable draw.io source](../../assets/diagrams/architecture-map/architecture-map.drawio) · [Full-size PNG](../../assets/diagrams/architecture-map/architecture-map.png)
 
-Print the SVG at full content width on a landscape page.
+Print the PNG at full content width on a landscape page.
 
 Solid arrows show calls and integration requests. Dashed arrows show proposed payment reconciliation and handoff recovery. Dotted arrows show persistence access.
 

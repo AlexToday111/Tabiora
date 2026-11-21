@@ -4,33 +4,33 @@
 
 ## General use-case diagram
 
-![General Tabiora use cases](../../assets/diagrams/use-case-general.svg)
+![General Tabiora use cases](../../assets/diagrams/use-case-general/use-case-general.png)
 
-[Full-size SVG](../../assets/diagrams/use-case-general.svg) · [PlantUML source](../../assets/diagrams/source/use-case-general.puml)
+[Full-size PNG](../../assets/diagrams/use-case-general/use-case-general.png) · [PlantUML source](../../assets/diagrams/use-case-general/use-case-general.puml)
 
 Customer, Waiter, and Manager act within Tabiora's workflows. Payment Provider and Restaurant/POS are external actors. The focused views expand the same system boundary.
 
 ## Customer use-case diagram
 
-![Customer use cases](../../assets/diagrams/use-case-customer.svg)
+![Customer use cases](../../assets/diagrams/use-case-customer/use-case-customer.png)
 
-[Full-size SVG](../../assets/diagrams/use-case-customer.svg) · [PlantUML source](../../assets/diagrams/source/use-case-customer.puml)
+[Full-size PNG](../../assets/diagrams/use-case-customer/use-case-customer.png) · [PlantUML source](../../assets/diagrams/use-case-customer/use-case-customer.puml)
 
 Table reservation includes availability checking. Blue marks recorded capabilities, and amber marks proposed detail or later scope. Labels also distinguish Must Have, Should Have, and Could Have.
 
 ## Waiter use-case diagram
 
-![Waiter use cases](../../assets/diagrams/use-case-waiter.svg)
+![Waiter use cases](../../assets/diagrams/use-case-waiter/use-case-waiter.png)
 
-[Full-size SVG](../../assets/diagrams/use-case-waiter.svg) · [PlantUML source](../../assets/diagrams/source/use-case-waiter.puml)
+[Full-size PNG](../../assets/diagrams/use-case-waiter/use-case-waiter.png) · [PlantUML source](../../assets/diagrams/use-case-waiter/use-case-waiter.puml)
 
 FR-014 covers notification receipt. Call handling and context-only pre-order read access follow P-CALL and P-STAFF.
 
 ## Manager use-case diagram
 
-![Manager use cases](../../assets/diagrams/use-case-manager.svg)
+![Manager use cases](../../assets/diagrams/use-case-manager/use-case-manager.png)
 
-[Full-size SVG](../../assets/diagrams/use-case-manager.svg) · [PlantUML source](../../assets/diagrams/source/use-case-manager.puml)
+[Full-size PNG](../../assets/diagrams/use-case-manager/use-case-manager.png) · [PlantUML source](../../assets/diagrams/use-case-manager/use-case-manager.puml)
 
 FR-012/FR-013 require staff management. P-STAFF allocates it to Manager. Availability changes depend on D-02, menu editing is a D-10 candidate, and FR-027 remains excluded.
 
@@ -141,9 +141,5 @@ Bill contract details remain open. The [payment sequence](../architecture/sequen
 | Alternative flows | No profile/history, missing occupancy data, unsupported connection/media, or unavailable dishes: explain missing information and use only an agreed fallback. No invented default recommendation or metric is required. |
 | Postconditions | Only selected capabilities produce their intended information or customer record; no priority is promoted by this grouping. |
 | Related requirements | FR-015–FR-019 (Should), FR-022–FR-026 (Could), NFR-012 (Could); D-09, D-12 |
-
-## Source-linked PNG export
-
-The [use-case PNG](../../assets/diagrams/restaurant-service-use-case-diagram.png) shares the [general use-case source](../../assets/diagrams/source/use-case-general.puml).
 
 [Architecture and UML](../architecture/README.md) · [Class models](../architecture/class-diagram.md)

@@ -8,9 +8,9 @@ The [baseline](architecture-baseline.md) defines invariants. See the [proposed l
 
 ## Table reservation
 
-![Table reservation sequence](../../assets/diagrams/sequence-diagram.svg)
+![Table reservation sequence](../../assets/diagrams/booking-sequence/booking-sequence.png)
 
-[SVG](../../assets/diagrams/sequence-diagram.svg) · [PlantUML](../../assets/diagrams/source/sequence-diagram.puml)
+[PNG](../../assets/diagrams/booking-sequence/booking-sequence.png) · [PlantUML](../../assets/diagrams/booking-sequence/booking-sequence.puml)
 
 **Start:** customer has selected table, interval and guest count. **End:** a confirmed finite reservation, `CONFLICT`, `INVALID`, or `SOURCE_UNAVAILABLE`. **Traceability:** UC-02, FR-004–FR-005, FR-009, NFR-004.
 
@@ -22,9 +22,9 @@ Failed handoff leaves the finite reservation intact. The booked end releases the
 
 ### Pre-order creation and checkout exit
 
-![Pre-order creation and checkout exits](../../assets/diagrams/preorder-payment-sequence.svg)
+![Pre-order creation and checkout exits](../../assets/diagrams/preorder-checkout-sequence/preorder-checkout-sequence.png)
 
-[SVG](../../assets/diagrams/preorder-payment-sequence.svg) · [PlantUML](../../assets/diagrams/source/preorder-payment-sequence.puml)
+[PNG](../../assets/diagrams/preorder-checkout-sequence/preorder-checkout-sequence.png) · [PlantUML](../../assets/diagrams/preorder-checkout-sequence/preorder-checkout-sequence.puml)
 
 **Start:** customer owns a CONFIRMED reservation and has no payment attempt for this checkout. **End:** a draft needing correction, entry to the payment subprocess, CANCELLED, or EXPIRED. **Traceability:** UC-03, FR-007–FR-008; P-PAY.
 
@@ -40,9 +40,9 @@ A draft adds no table hold. D-04 governs the proposed finite checkout deadline. 
 
 ## Payment initiation and outcomes
 
-![Payment initiation and late outcomes](../../assets/diagrams/payment-sequence.svg)
+![Payment initiation and late outcomes](../../assets/diagrams/payment-sequence/payment-sequence.png)
 
-[SVG](../../assets/diagrams/payment-sequence.svg) · [PlantUML](../../assets/diagrams/source/payment-sequence.puml)
+[PNG](../../assets/diagrams/payment-sequence/payment-sequence.png) · [PlantUML](../../assets/diagrams/payment-sequence/payment-sequence.puml)
 
 **Start:** customer confirms a valid quote. **End:** rejected initiation, a verified terminal financial result, or explicit UNKNOWN awaiting reconciliation/review. **Traceability:** UC-03, FR-008–FR-009, NFR-005/NFR-008; AC-002/AC-005/AC-006.
 
@@ -64,9 +64,9 @@ FR-011 bill settlement is a separate flow. [UC-06](../requirements/use-cases.md#
 
 ## Waiter call
 
-![Waiter-call processing](../../assets/diagrams/waiter-call-sequence.svg)
+![Waiter-call processing](../../assets/diagrams/waiter-call-sequence/waiter-call-sequence.png)
 
-[SVG](../../assets/diagrams/waiter-call-sequence.svg) · [PlantUML](../../assets/diagrams/source/waiter-call-sequence.puml)
+[PNG](../../assets/diagrams/waiter-call-sequence/waiter-call-sequence.png) · [PlantUML](../../assets/diagrams/waiter-call-sequence/waiter-call-sequence.puml)
 
 **Start:** customer requests service in a validated restaurant/table context. **End:** rejected context, explicit delivery failure, or a retained call progressing through staff acknowledgement/resolution. **Traceability:** UC-04, FR-010/FR-014, NFR-002/NFR-006.
 
@@ -76,4 +76,4 @@ CallService routes through StaffNotifier. Endpoint receipt gives `NOTIFIED`. Sta
 
 Messages use the operations in the [class models](class-diagram.md). Sequence fragments show branches and repetition. Log important transitions under NFR-008.
 
-[Use cases](../requirements/use-cases.md) · [Editable sources and exports](../../assets/diagrams/source/README.md#files) · [Architecture index](README.md)
+[Use cases](../requirements/use-cases.md) · [Editable sources and exports](../../assets/diagrams/README.md#files) · [Architecture index](README.md)

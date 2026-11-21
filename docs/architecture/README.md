@@ -16,7 +16,7 @@ Start with the [Architecture Baseline v1.0](architecture-baseline.md) and [Archi
 
 ## Diagram index
 
-The Architecture Map and all 12 maintained UML views have editable sources and generated SVGs.
+Each diagram has one editable source and one PNG export.
 
 | View | Current diagram | Main traceability |
 | --- | --- | --- |
@@ -33,8 +33,11 @@ The Architecture Map and all 12 maintained UML views have editable sources and g
 | Sequence | [Pre-order/checkout exit](sequence-diagram.md#pre-order-and-payment) | UC-03; confirmation, unpaid cancellation and abandonment |
 | Sequence | [Payment outcomes](sequence-diagram.md#payment-initiation-and-outcomes) | UC-03; verified results, timeout, late success and review |
 | Sequence | [Waiter call](sequence-diagram.md#waiter-call) | UC-04; routing, receipt, acknowledgement, resolution |
+| State | [PreOrder](../../assets/diagrams/state-preorder/state-preorder.png) | Lab 8, FR-007–FR-009, P-PAY |
+| State | [Payment](../../assets/diagrams/state-payment/state-payment.png) | Lab 8, FR-008, NFR-005, NFR-008, P-PAY |
+| State | [WaiterCall](../../assets/diagrams/state-waiter-call/state-waiter-call.png) | Lab 8, FR-010, FR-014, P-CALL |
 
-[Source and SVG file index](../../assets/diagrams/source/README.md#files)
+[Source and PNG file index](../../assets/diagrams/README.md#files)
 
 ## Scope and modelling conventions
 
@@ -59,6 +62,6 @@ Before expanding, revisit D-01, D-02, D-05, D-08, and P-SCALE using the evidence
 
 ## Superseded diagrams and maintenance
 
-The focused views replace the earlier combined class and sequence models. The [source guide](../../assets/diagrams/source/README.md#files) maps maintained sources to exports and gives the validation workflow.
+The focused views replace the earlier combined class and sequence models. The [source guide](../../assets/diagrams/README.md#files) maps maintained sources to exports and gives the validation workflow.
 
 [Back to project documentation](../../README.md#documentation)
