@@ -1,16 +1,20 @@
 @startuml
-!pragma layout smetana
+!pragma layout elk
 title Tabiora - General Domain Model
 skinparam shadowing false
+skinparam linetype ortho
 skinparam defaultFontName SansSerif
-skinparam defaultFontSize 13
+skinparam defaultFontSize 16
 skinparam classAttributeIconSize 0
+skinparam classBackgroundColor #E3EFFA
+skinparam classBorderColor #344455
 skinparam packageStyle rectangle
 hide empty members
+hide circle
 
 left to right direction
-skinparam nodesep 40
-skinparam ranksep 55
+skinparam nodesep 22
+skinparam ranksep 30
 class Customer
 class Restaurant
 class RestaurantTable
@@ -20,26 +24,20 @@ class PreOrder
 class OrderItem
 class Payment
 class WaiterCall
-class ActivityLog <<Should Have>>
-class PreferenceProfile <<Should Have>>
-class Recommendation <<Should Have>>
-Restaurant "1" -- "1..*" RestaurantTable : has
-Customer "1" -- "0..*" Reservation : makes
-RestaurantTable "1" -- "0..*" Reservation : reserves
-Reservation "1" -- "0..1" PreOrder : P-PAY
-PreOrder "1" *-- "0..*" OrderItem : contains
-OrderItem "0..*" -- "1" MenuItem : references
-PreOrder "1" -- "0..*" Payment : attempts
-Customer "1" -- "0..*" WaiterCall : initiates
-RestaurantTable "1" -- "0..*" WaiterCall : context
-Customer "1" -- "0..*" ActivityLog : FR-017
-Customer "1" -- "0..1" PreferenceProfile : FR-018
-PreferenceProfile "1" -- "0..*" Recommendation : FR-019
-Recommendation ..> ActivityLog : informs
-legend bottom
-Design proposal, not implementation. FR-001-FR-019; AC-004.
-Focused models add floor plans, menus, staff roles, services, and states.
-A draft has zero items; submission requires at least one item (P-PAY).
-Bill payment is FR-011; bill ownership remains D-05.
-endlegend
+class ActivityLog
+class PreferenceProfile
+class Recommendation
+Restaurant "1" -- "1..*" RestaurantTable
+Customer -- Reservation
+RestaurantTable -- Reservation
+Reservation "1" -- "0..1" PreOrder
+PreOrder *-- "0..*" OrderItem
+OrderItem "0..*" -- "1" MenuItem
+PreOrder -- "0..*" Payment
+Customer -- WaiterCall
+RestaurantTable -- WaiterCall
+Customer -- ActivityLog
+Customer -- PreferenceProfile
+PreferenceProfile "1" -- "0..*" Recommendation
+Recommendation ..> ActivityLog
 @enduml

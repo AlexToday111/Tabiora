@@ -8,7 +8,7 @@
 
 [Full-size PNG](../../assets/diagrams/use-case-general/use-case-general.png) · [PlantUML source](../../assets/diagrams/use-case-general/use-case-general.puml)
 
-Customer, Waiter, and Manager act within Tabiora's workflows. Payment Provider and Restaurant/POS are external actors. The focused views expand the same system boundary.
+Customer, Waiter, and Manager use Tabiora. Payment Provider and Restaurant/POS are external actors. Filtering extends search; booking includes a conflict check. Prepayment and bill payment are separate use cases.
 
 ## Customer use-case diagram
 
@@ -16,7 +16,7 @@ Customer, Waiter, and Manager act within Tabiora's workflows. Payment Provider a
 
 [Full-size PNG](../../assets/diagrams/use-case-customer/use-case-customer.png) · [PlantUML source](../../assets/diagrams/use-case-customer/use-case-customer.puml)
 
-Table reservation includes availability checking. Blue marks recorded capabilities, and amber marks proposed detail or later scope. Labels also distinguish Must Have, Should Have, and Could Have.
+This focused view covers discovery and booking. The availability preview is advisory; booking checks conflicts at confirmation. Ordering, payment, and waiter calls appear in the general view and the use-case specifications below.
 
 ## Waiter use-case diagram
 

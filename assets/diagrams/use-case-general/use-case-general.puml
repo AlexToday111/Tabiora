@@ -1,44 +1,67 @@
 @startuml
+!pragma layout elk
 title Tabiora - General Use Cases
 skinparam shadowing false
 skinparam defaultFontName SansSerif
-skinparam defaultFontSize 13
-skinparam classAttributeIconSize 0
+skinparam defaultFontSize 16
+skinparam defaultFontColor #111111
 skinparam packageStyle rectangle
-hide empty members
-skinparam usecaseBackgroundColor #EAF4FF
-skinparam usecaseBorderColor #3D5368
-
+skinparam usecaseBackgroundColor #FFFFFF
+skinparam usecaseBorderColor #222222
+skinparam ArrowColor #222222
 left to right direction
+
 actor Customer
 actor Waiter
 actor Manager
 actor "Payment Provider" as Provider
 actor "Restaurant/POS" as POS
+
 rectangle "Tabiora" {
- usecase "Discover restaurants\nFR-001-FR-004, FR-006" as Discover
- usecase "Reserve a table\nFR-005" as Book
- usecase "Create a pre-order\nFR-007" as Order
- usecase "Prepay / pay bill\nFR-008, FR-011" as Pay
- usecase "Call / receive waiter request\nFR-010, FR-014" as Call
- usecase "Manage reservations / pre-orders\nFR-012-FR-013" as Manage
- usecase "Exchange restaurant information\nFR-009, AC-001, AC-005" as Sync
- usecase "Later visit capabilities\nFR-015-FR-026; Should/Could" as Later #FFF4D6
+ package "Customer App" {
+  usecase "Search restaurants\nFR-001" as Search
+  usecase "Filter restaurants\nFR-002" as Filter
+  usecase "Reserve a table\nFR-005" as Book
+  usecase "Check booking conflict\nFR-005, NFR-004" as Conflict
+  usecase "Create a pre-order\nFR-007" as Order
+  usecase "Prepay a pre-order\nFR-008" as Prepay
+  usecase "Pay restaurant bill\nFR-011" as Bill
+  usecase "Call a waiter\nFR-010" as Call
+  usecase "Pay by phone" as PhonePayment
+ }
+ package "Staff Interface" {
+  usecase "Receive waiter-call\nnotification\nFR-014" as Notify
+  usecase "Manage reservations\nFR-012" as ManageBookings
+  usecase "Manage pre-orders\nFR-013" as ManageOrders
+ }
+ package "Restaurant Integration" {
+  usecase "Deliver confirmed\nreservation / pre-order\nFR-009" as Handoff
+ }
 }
-Customer -- Discover
-Customer -- Book
-Customer -- Order
-Customer -- Pay
-Customer -- Call
-Customer -- Later
-Waiter -- Call
-Manager -- Manage
-Provider -- Pay
-POS -- Sync
-legend bottom
-Blue: recorded capabilities; amber: later Should/Could scope.
-Waiter and Manager are roles; one employee may play both per restaurant.
-P-STAFF role allocation and P-PAY provider delegation remain proposed.
-Design stage; requirement IDs and priority labels remain authoritative.
-endlegend
+
+Search -[hidden]down-> Book
+Book -[hidden]down-> Order
+Order -[hidden]down-> Prepay
+Prepay -[hidden]down-> Bill
+Bill -[hidden]down-> Call
+Notify -[hidden]down-> ManageBookings
+ManageBookings -[hidden]down-> ManageOrders
+
+Search -- Customer
+Book -- Customer
+Order -- Customer
+Prepay -- Customer
+Bill -- Customer
+Call -- Customer
+Search <.. Filter : <<extend>>\n[filters selected]
+Book ..> Conflict : <<include>>
+Prepay --|> PhonePayment
+Bill --|> PhonePayment
+Prepay -- Provider
+Bill -- Provider
+Notify -- Waiter
+ManageBookings -- Manager
+ManageOrders -- Manager
+Handoff -- POS
+
 @enduml

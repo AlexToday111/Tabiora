@@ -1,12 +1,16 @@
 @startuml
-!pragma layout smetana
+!pragma layout elk
 title Tabiora - Ordering and Payment
 skinparam shadowing false
+skinparam linetype ortho
 skinparam defaultFontName SansSerif
 skinparam defaultFontSize 13
 skinparam classAttributeIconSize 0
+skinparam classBackgroundColor #E3EFFA
+skinparam classBorderColor #344455
 skinparam packageStyle rectangle
 hide empty members
+hide circle
 
 top to bottom direction
 class Reservation {
@@ -48,7 +52,7 @@ class Payment {
  +applyVerifiedResult(result)
  +markUnknown()
 }
-enum PreOrderStatus {
+enum PreOrderStatus <<enumeration>> #FFF0D2 {
  DRAFT
  AWAITING_PAYMENT
  PAID
@@ -56,18 +60,18 @@ enum PreOrderStatus {
  EXPIRED
  REVIEW_REQUIRED
 }
-enum PaymentStatus {
+enum PaymentStatus <<enumeration>> #FFF0D2 {
  INITIATED
  SUCCEEDED
  FAILED
  UNKNOWN
 }
-enum DeliveryStatus {
+enum DeliveryStatus <<enumeration>> #FFF0D2 {
  PENDING
  DELIVERED
  FAILED
 }
-class OrderService <<application service>> {
+class OrderService <<application service>> #E1F2E7 {
  +createPreOrder(reservationId, readyAt)
  +addItem(orderId, itemId, quantity)
  +quote(orderId)
@@ -78,18 +82,18 @@ class OrderService <<application service>> {
  +reviewUnresolved(orderId)
  +recordDelivery(reference, result)
 }
-class PaymentService <<application service>> {
+class PaymentService <<application service>> #E1F2E7 {
  +initiatePayment(orderId)
  +handleProviderResult(event)
  +markUnknown(attemptId)
  +reconcilePayment(attemptId)
 }
-interface PaymentProviderPort {
+interface PaymentProviderPort <<interface>> #EFE8FA {
  +initiate(attemptId, amount, currency): ProviderResult
  +verifyResult(event): ProviderResult
  +queryStatus(attemptId): ProviderResult
 }
-interface POSIntegration {
+interface POSIntegration <<interface>> #EFE8FA {
  +deliverConfirmed(reference): DeliveryResult
 }
 Reservation "1" -- "0..1" PreOrder : P-PAY
@@ -106,10 +110,4 @@ PaymentService ..> OrderService : verified success
 PreOrder ..> PreOrderStatus
 Payment ..> PaymentStatus
 PreOrder ..> DeliveryStatus
-legend bottom
-P-PAY / P-INTEGRATION: proposed design, FR-006-FR-009; NFR-008; AC-002, AC-005-AC-006.
-No new attempt while unresolved. Closed-order success -> REVIEW_REQUIRED.
-Before initiation, cancel/expiry creates no attempt. Deadlines/refunds remain D-04-D-05.
-Bill payment FR-011 reuses the provider concept; bill model remains D-05, not a pre-order.
-endlegend
 @enduml

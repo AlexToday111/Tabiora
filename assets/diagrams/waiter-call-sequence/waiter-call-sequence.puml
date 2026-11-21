@@ -2,7 +2,7 @@
 title Tabiora - Waiter Call
 skinparam shadowing false
 skinparam defaultFontName SansSerif
-skinparam defaultFontSize 13
+skinparam defaultFontSize 15
 skinparam classAttributeIconSize 0
 skinparam packageStyle rectangle
 hide empty members
@@ -10,59 +10,60 @@ hide empty members
 autonumber
 actor Customer
 participant "CallService" as Calls
-participant "StaffNotifier\n(staff endpoint access)" as Notifier
+participant "StaffNotifier" as Notifier
+participant "Staff Endpoint" as Endpoint
 actor Waiter
-note over Customer,Calls
-P-CALL / P-STAFF proposed.
-Validate customer/table context; mechanism TBD (D-07).
-All staff actions require WAITER in the active restaurant membership.
-The same employee may also have MANAGER; roles are not inherited.
-end note
 Customer -> Calls : createCall(customerId, tableId)
+||20||
 alt Invalid or unauthorized visit context
  Calls --> Customer : request rejected; no call created
 else Valid context
- note over Calls : WaiterCall = CREATED; preserve call reference.
+ note over Calls : WaiterCall = CREATED.
  Calls -> Calls : routeCall(callId)
  Calls -> Notifier : notifyStaff(callId, restaurantId)
+ Notifier -> Endpoint : deliverNotification(callId)
+ ||20||
  alt Staff endpoint receives notification
-  Notifier -> Waiter : call notification
+  Endpoint --> Notifier : endpoint receipt
   Notifier --> Calls : DELIVERED (endpoint receipt)
   note over Calls : WaiterCall = NOTIFIED
   Calls --> Customer : notification delivered; awaiting staff response
  else Notification cannot be delivered / receipt unknown
+  ||18||
+  Endpoint --> Notifier : failed / no confirmed receipt
   Notifier --> Calls : FAILED
   note over Calls : WaiterCall = DELIVERY_FAILED
   Calls --> Customer : call recorded; staff delivery failed
+  ||20||
   opt Re-route when allowed by agreed policy (TBD)
    Calls -> Calls : routeCall(callId)
    Calls -> Notifier : notifyStaff(callId, restaurantId)
+   Notifier -> Endpoint : deliverNotification(callId)
    alt Endpoint receives re-routed call
-    Notifier -> Waiter : same call reference
+    Endpoint --> Notifier : endpoint receipt
     Notifier --> Calls : DELIVERED
     note over Calls : WaiterCall = NOTIFIED
    else Delivery still fails
+    Endpoint --> Notifier : failed / no confirmed receipt
     Notifier --> Calls : FAILED
-    note over Calls : Retain DELIVERY_FAILED; escalation remains D-07.
+    note over Calls : WaiterCall = DELIVERY_FAILED.
    end
   end
  end
+ ||20||
  opt Staff received the call and is authorized
   Waiter -> Calls : acknowledge(callId, staffId)
+  ||18||
   alt Call available for acknowledgement
-   note over Calls : WaiterCall = ACKNOWLEDGED; assign waiter.
+   note over Calls : WaiterCall = ACKNOWLEDGED.
    Calls --> Waiter : acknowledgement recorded
    Waiter -> Calls : resolve(callId, staffId)
    note over Calls : WaiterCall = RESOLVED
    Calls --> Waiter : resolution recorded
   else Already handled or role/context not permitted
+   ||18||
    Calls --> Waiter : reject state change; show current status
   end
  end
 end
-legend bottom
-FR-010, FR-014; NFR-002, NFR-006; AC-004.
-Human acknowledgement is not device delivery; resolution is not acknowledgement.
-Routing/acknowledgement/resolution/retry details are proposals; timings remain D-07-D-08.
-endlegend
 @enduml

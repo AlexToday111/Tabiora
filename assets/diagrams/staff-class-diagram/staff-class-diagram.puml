@@ -1,11 +1,15 @@
 @startuml
-!pragma layout smetana
+!pragma layout elk
 title Tabiora - Staff Memberships and Responsibilities
 skinparam shadowing false
+skinparam linetype ortho
 skinparam defaultFontName SansSerif
 skinparam defaultFontSize 13
 skinparam classAttributeIconSize 0
+skinparam classBackgroundColor #E3EFFA
+skinparam classBorderColor #344455
 hide empty members
+hide circle
 
 top to bottom direction
 class User {
@@ -17,7 +21,7 @@ class RestaurantStaff {
  staffId: Identifier
  roles: Set<StaffRole>
 }
-enum StaffRole {
+enum StaffRole <<enumeration>> #FFF0D2 {
  WAITER
  MANAGER
 }
@@ -29,23 +33,23 @@ class WaiterCall {
  tableId: Identifier
  status: WaiterCallStatus
 }
-enum WaiterCallStatus {
+enum WaiterCallStatus <<enumeration>> #FFF0D2 {
  CREATED
  NOTIFIED
  ACKNOWLEDGED
  RESOLVED
  DELIVERY_FAILED
 }
-class CallService <<application service>> {
+class CallService <<application service>> #E1F2E7 {
  +createCall(customerId, tableId)
  +routeCall(callId)
  +acknowledge(callId, staffId)
  +resolve(callId, staffId)
 }
-interface StaffNotifier {
+interface StaffNotifier <<interface>> #EFE8FA {
  +notifyStaff(callId, restaurantId): DeliveryResult
 }
-class StaffOperationsService <<application service>> {
+class StaffOperationsService <<application service>> #E1F2E7 {
  +viewReservations(staffId, restaurantId)
  +viewPreOrders(staffId, restaurantId)
  +manageReservation(staffId, reservationId, action)
@@ -65,16 +69,4 @@ CallService ..> WaiterCall
 CallService ..> StaffNotifier
 StaffOperationsService ..> RestaurantStaff : checks role + restaurant
 WaiterCall ..> WaiterCallStatus
-note bottom of StaffRole
-WAITER: call handling + relevant pre-order read.
-MANAGER: scoped reservation/pre-order management.
-One membership may contain BOTH roles.
-No automatic role inheritance.
-end note
-legend bottom
-P-STAFF / P-CALL proposed; FR-010, FR-012-FR-014; NFR-006; AC-004.
-One person can have different role sets in different restaurants.
-Menu/availability changes remain candidates (D-10-D-11).
-No blacklist management or cross-restaurant permission.
-endlegend
 @enduml

@@ -2,7 +2,7 @@
 title Tabiora - Table Reservation
 skinparam shadowing false
 skinparam defaultFontName SansSerif
-skinparam defaultFontSize 13
+skinparam defaultFontSize 15
 skinparam classAttributeIconSize 0
 skinparam packageStyle rectangle
 hide empty members
@@ -12,32 +12,20 @@ actor Customer
 participant "BookingService" as Booking
 participant "BookingAuthority\n(logical authority)" as Authority
 participant "POSIntegration" as POS
-note over Booking,Authority
-P-BOOK / P-INTEGRATION: proposed design.
-Start: selected table, interval and guest count.
-Authority may be Tabiora or restaurant-side (D-02).
-end note
 Customer -> Booking : checkAvailability(tableId, start, end, guestCount)
 Booking -> Authority : checkAvailability(tableId, start, end, guestCount)
 Authority --> Booking : preview outcome
 Booking --> Customer : available / table unavailable / INVALID / SOURCE_UNAVAILABLE
+||20||
 alt Preview available and customer confirms
  Customer -> Booking : createBooking(customerId, tableId, start, end, guestCount)
  critical One authoritative conflict decision and creation
   Booking -> Authority : createIfAvailable(customerId, tableId, start, end, guestCount)
-  note right of Authority
-  Validate interval/capacity and current overlap.
-  A competing booking may have won since preview.
-  No lock/database technology is selected.
-  end note
   Authority --> Booking : CONFIRMED + reservation / CONFLICT / INVALID / SOURCE_UNAVAILABLE
  end
+ ||20||
  alt CONFIRMED
-  note over Booking
-  Reservation.status = CONFIRMED
-  deliveryStatus = PENDING
-  Payment is not a prerequisite under P-BOOK.
-  end note
+  note over Booking : CONFIRMED; delivery pending.
   Booking -> POS : deliverConfirmed(reservation reference)
   alt Restaurant acknowledges
    POS --> Booking : DELIVERED
@@ -45,27 +33,24 @@ alt Preview available and customer confirms
   else Handoff fails or acknowledgement is unknown
    POS --> Booking : FAILED
    Booking -> Booking : recordDelivery(reference, FAILED)
-   note over Booking : Retain CONFIRMED; recovery policy D-06.
+   note over Booking : Reservation remains CONFIRMED.
   end
   Booking --> Customer : confirmed reservation + delivery status
  else CONFLICT
+  ||18||
   Booking --> Customer : no reservation created; choose another interval/table
  else INVALID
+  ||18||
   Booking --> Customer : no reservation created; correct input
  else SOURCE_UNAVAILABLE
+  ||18||
   Booking --> Customer : authoritative result unknown; confirmation unestablished
-  note over Booking,Authority : Verify uncertain writes at the authority.
+  note over Booking,Authority : Reconcile uncertain creation.
  end
 else Table unavailable / INVALID / SOURCE_UNAVAILABLE
- note over Customer,Booking : Explain outcome; no booking success is claimed.
 end
-note over Customer,Booking : End of request: confirmed reservation, rejection, or uncertain authority result.
+||25||
 opt Later lifecycle: confirmed visit reaches its booked end (P-BOOK)
  Booking -> Booking : expireReservation(reservationId)
- note over Booking : EXPIRED; interval no longer blocks the table.
 end
-legend bottom
-FR-004-FR-005, FR-009; NFR-004; AC-001, AC-004-AC-006.
-Atomic exclusion is required. P-BOOK capacity/boundary and confirmation policies are proposed.
-endlegend
 @enduml

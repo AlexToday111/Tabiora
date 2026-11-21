@@ -1,30 +1,31 @@
 @startuml
+!pragma layout elk
 title Tabiora - Waiter Use Cases
 skinparam shadowing false
 skinparam defaultFontName SansSerif
-skinparam defaultFontSize 13
+skinparam defaultFontSize 16
+skinparam defaultFontColor #111111
 skinparam classAttributeIconSize 0
 skinparam packageStyle rectangle
 hide empty members
-skinparam usecaseBackgroundColor #EAF4FF
-skinparam usecaseBorderColor #3D5368
+skinparam usecaseBackgroundColor #FFFFFF
+skinparam usecaseBorderColor #222222
+skinparam ArrowColor #222222
 
 left to right direction
 actor Waiter
 rectangle "Tabiora - Waiter" {
- usecase "Receive waiter-call notification\nFR-014; Must" as Receive
- usecase "Acknowledge a call\nP-CALL; proposed" as Ack #FFF4D6
- usecase "Resolve a call\nP-CALL; proposed" as Resolve #FFF4D6
- usecase "View relevant pre-orders\nFR-013; proposed read allocation" as Orders #FFF4D6
+ usecase "Receive waiter-call notification" as Receive
+ usecase "Acknowledge a call" as Ack
+ usecase "Resolve a call" as Resolve
+ usecase "View relevant pre-orders" as Orders
 }
-Waiter -- Receive
-Waiter -- Ack
-Waiter -- Resolve
-Waiter -- Orders
-legend bottom
-Blue: FR-014; amber: proposed P-CALL workflow / P-STAFF read allocation.
-Waiter means the WAITER role in the active restaurant membership.
-The same employee may also hold MANAGER; no automatic management rights.
-Receipt, acknowledgement and resolution differ; routing/timing remain D-07-D-11.
-endlegend
+Receive -[hidden]down-> Ack
+Ack -[hidden]down-> Resolve
+Resolve -[hidden]down-> Orders
+
+Receive -- Waiter
+Ack -- Waiter
+Resolve -- Waiter
+Orders -- Waiter
 @enduml

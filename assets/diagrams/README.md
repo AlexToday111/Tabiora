@@ -33,7 +33,7 @@ Standalone editable views from Lab 8.
 ## Rendering
 
 - **draw.io.** Open the source and export PNG at 300% with a white background and a small border. Fit the export to the diagram content.
-- **PlantUML.** Use PlantUML 1.2025.2. It saves the PNG next to the specified source. For use cases, check Graphviz with `java -jar $plantUmlJar -testdot`.
+- **PlantUML.** Use PlantUML 1.2025.2. It saves the PNG next to the specified source. Use-case and class sources use built-in Smetana or ELK layouts.
 
 ```powershell
 $plantUmlJar = 'C:/path/to/plantuml-1.2025.2.jar'

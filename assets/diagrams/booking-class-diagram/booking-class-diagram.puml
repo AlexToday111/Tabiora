@@ -2,11 +2,15 @@
 !pragma layout smetana
 title Tabiora - Booking and Reservation
 skinparam shadowing false
+skinparam linetype ortho
 skinparam defaultFontName SansSerif
 skinparam defaultFontSize 13
 skinparam classAttributeIconSize 0
+skinparam classBackgroundColor #E3EFFA
+skinparam classBorderColor #344455
 skinparam packageStyle rectangle
 hide empty members
+hide circle
 
 top to bottom direction
 class Customer {
@@ -30,12 +34,17 @@ class Reservation {
  status: ReservationStatus
  deliveryStatus: DeliveryStatus
 }
-enum ReservationStatus {
+enum DeliveryStatus <<enumeration>> #FFF0D2 {
+ PENDING
+ DELIVERED
+ FAILED
+}
+enum ReservationStatus <<enumeration>> #FFF0D2 {
  CONFIRMED
  CANCELLED
  EXPIRED
 }
-class BookingService <<application service>> {
+class BookingService <<application service>> #E1F2E7 {
  +checkAvailability(tableId, start, end, guestCount): AvailabilityResult
  +createBooking(customerId, tableId, start, end, guestCount): BookingResult
  +changeReservation(reservationId, newStart, newEnd): BookingResult
@@ -43,36 +52,21 @@ class BookingService <<application service>> {
  +expireReservation(reservationId)
  +recordDelivery(reference, result)
 }
-interface BookingAuthority {
+interface BookingAuthority <<interface>> #EFE8FA {
  +checkAvailability(tableId, start, end, guestCount): AvailabilityResult
  +createIfAvailable(customerId, tableId, start, end, guestCount): BookingResult
+ +changeIfAvailable(reservationId, newStart, newEnd): BookingResult
 }
-interface POSIntegration {
+interface POSIntegration <<interface>> #EFE8FA {
  +deliverConfirmed(reference): DeliveryResult
 }
 Customer "1" -- "0..*" Reservation
 Restaurant "1" -- "1" FloorPlan
-Restaurant "1" -- "1..*" RestaurantTable
 FloorPlan "1" -- "1..*" RestaurantTable : displays
 RestaurantTable "1" -- "0..*" Reservation
 BookingService ..> BookingAuthority : delegates atomic decision
 BookingService ..> Reservation : coordinates
 BookingService ..> POSIntegration : confirmed handoff
 Reservation ..> ReservationStatus
-note right of BookingAuthority
-One coordinated authority across booking channels.
-Implementation and source of truth TBD (D-02).
-Preview does not reserve a table.
-end note
-note bottom of ReservationStatus
-P-BOOK: create CONFIRMED independently of payment.
-P-BOOK: expiry at booked end; cancellation policy TBD.
-P-INTEGRATION: delivery is tracked separately.
-end note
-legend bottom
-Proposed design: P-BOOK, P-INTEGRATION.
-FR-004-FR-005, FR-009, FR-012; NFR-004; AC-001, AC-004-AC-006.
-changeReservation is Should Have FR-020; deadline remains TBD.
-BookingResult: CONFIRMED + reservation / CONFLICT / INVALID / SOURCE_UNAVAILABLE.
-endlegend
+Reservation ..> DeliveryStatus
 @enduml

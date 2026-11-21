@@ -1,54 +1,37 @@
 @startuml
-title Tabiora - Customer Use Cases
+!pragma layout elk
+title Tabiora - Customer Discovery and Booking
 skinparam shadowing false
 skinparam defaultFontName SansSerif
-skinparam defaultFontSize 13
-skinparam classAttributeIconSize 0
+skinparam defaultFontSize 16
+skinparam defaultFontColor #111111
 skinparam packageStyle rectangle
-hide empty members
-skinparam usecaseBackgroundColor #EAF4FF
-skinparam usecaseBorderColor #3D5368
-
+skinparam usecaseBackgroundColor #FFFFFF
+skinparam usecaseBorderColor #222222
+skinparam ArrowColor #222222
 left to right direction
+
 actor Customer
-actor "Payment Provider" as Provider
-rectangle "Tabiora - Customer" {
- package "Must Have: discovery" {
-  usecase "Search / filter restaurants\nFR-001-FR-002" as Search
-  usecase "View restaurant information\nFR-003" as Info
-  usecase "View floor plan\nFR-004" as Floor
-  usecase "Browse menu\nFR-006" as Menu
+rectangle "Tabiora - Customer App" {
+ package "Discovery" {
+  usecase "Search restaurants\nFR-001" as Search
+  usecase "Filter restaurants\nFR-002" as Filter
+  usecase "View restaurant details\nFR-003" as Details
+  usecase "View menu\nFR-006" as Menu
  }
- package "Must Have: visit" {
-  usecase "Check table availability\nFR-004-FR-005" as Availability
+ package "Booking" {
+  usecase "View timed table\navailability\nFR-004" as Availability
   usecase "Reserve a table\nFR-005" as Book
-  usecase "Create a pre-order\nFR-007" as Order
-  usecase "Prepay order / pay bill\nFR-008, FR-011" as Pay
-  usecase "Call a waiter\nFR-010" as Call
- }
- package "Later candidates: priorities retained" {
-  usecase "Modify reservation / pre-order\nFR-020-FR-021; Should" as Change #FFF4D6
-  usecase "Occupancy / adaptive menu /\nprofile / recommendations\nFR-015-FR-019; Should" as Personal #FFF4D6
-  usecase "Average occupancy / dish advice /\nadditional dishes / favorites / feedback\nFR-022-FR-026; Could" as Optional #FFF4D6
+  usecase "Check booking conflict\nat confirmation\nFR-005, NFR-004" as Conflict
  }
 }
-Customer -- Search
-Customer -- Info
-Customer -- Floor
-Customer -- Menu
-Customer -- Book
-Customer -- Order
-Customer -- Pay
-Customer -- Call
-Customer -- Change
-Customer -- Personal
-Customer -- Optional
-Book ..> Availability : <<include>>
-Provider -- Pay
-legend bottom
-Blue: Must Have; amber: Should/Could candidates. Labels are authoritative.
-Booking includes an availability check; a floor-plan preview is not a reservation.
-Provider delegation is P-PAY; modification deadlines remain D-03-D-04.
-Blacklist management is excluded initially (FR-027).
-endlegend
+
+Search -- Customer
+Details -- Customer
+Menu -- Customer
+Availability -- Customer
+Book -- Customer
+Search <.. Filter : <<extend>>\n[filters selected]
+Book ..> Conflict : <<include>>
+
 @enduml

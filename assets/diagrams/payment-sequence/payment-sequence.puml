@@ -2,7 +2,7 @@
 title Tabiora - Payment Confirmation and Late Outcomes
 skinparam shadowing false
 skinparam defaultFontName SansSerif
-skinparam defaultFontSize 13
+skinparam defaultFontSize 15
 skinparam classAttributeIconSize 0
 hide empty members
 
@@ -12,19 +12,16 @@ participant "PaymentService" as Payments
 participant "OrderService" as Order
 participant "PaymentProviderPort" as Provider
 participant "POSIntegration" as POS
-note over Customer,Order
-Start: valid quoted pre-order; customer confirms payment.
-P-PAY proposed; order/visit eligibility rechecked at initiation.
-end note
 Customer -> Payments : initiatePayment(orderId)
 Payments -> Order : markAwaitingPayment(orderId)
+||20||
 alt Order/quote closed, already paid, or unresolved attempt exists
  Order --> Payments : reject initiation
  Payments --> Customer : no new attempt; current status / reconciliation needed
 else Initiation accepted as one logical decision
  Order --> Payments : AWAITING_PAYMENT + validated amount/currency
- note over Payments : Register Payment INITIATED with stable attemptId.
  Payments -> Provider : initiate(attemptId, amount, currency)
+ ||20||
  alt Result received
   Provider --> Payments : result event
   Payments -> Payments : handleProviderResult(event)
@@ -39,58 +36,42 @@ else Initiation accepted as one logical decision
    Provider --> Payments : verified result / unresolved
   end
  end
+ ||20||
  opt Checkout expires or reservation is cancelled/expires while unresolved
   Order -> Order : reviewUnresolved(orderId)
   note over Order : REVIEW_REQUIRED; no new attempt or fulfilment.
  end
+ ||20||
  alt Verified success for expected attempt/amount/currency
-  note over Payments : Payment = SUCCEEDED; retain financial truth once.
+  note over Payments : Payment = SUCCEEDED.
   Payments -> Order : acceptPaidOrder(orderId, attemptId)
   alt Order and reservation remain eligible
    Order --> Payments : PAID
    Order -> POS : deliverConfirmed(order reference)
    POS --> Order : DELIVERED / FAILED
    Order -> Order : recordDelivery(reference, result)
-   note over Order : Failed delivery preserves PAID; recover separately.
+   note over Order : Delivery failure preserves PAID.
    Payments --> Customer : payment succeeded + delivery status
   else Order/visit cancelled, expired, or otherwise ineligible
+   ||18||
    Order --> Payments : REVIEW_REQUIRED
-   note over Payments,Order
-   No rebooking and no automatic restaurant handoff.
-   Refund / review policy and owner remain D-04.
-   end note
    Payments --> Customer : funds received; order requires review
   end
  else Verified rejection
-  note over Payments,Order
-  Payment = FAILED.
-  Eligible order stays AWAITING_PAYMENT.
-  Closed/ineligible order stays REVIEW_REQUIRED.
-  Reservation lifecycle is unchanged.
-  end note
+  ||18||
+  note over Payments,Order : Payment = FAILED; eligible order may retry.
   Payments --> Customer : payment rejected
  else No verified terminal result
+  ||18||
   Payments -> Payments : markUnknown(attemptId)
   Payments --> Customer : UNKNOWN; reconcile; no new attempt
  end
+ ||20||
  opt Late or duplicate provider event
   Provider -> Payments : handleProviderResult(event)
   Payments -> Provider : verifyResult(event)
   Provider --> Payments : verified outcome / reject
-  note over Payments,Order
-  Apply the same eligibility/outcome handling above.
-  Late success on closed order -> REVIEW_REQUIRED.
-  Replay unfinished effects, never duplicate or regress SUCCEEDED.
-  end note
+  note over Payments,Order : Late success on closed order requires review.
  end
 end
-note over Customer,Order
-End: verified outcome or explicit UNKNOWN awaiting reconciliation.
-Closing the app after initiation is not cancellation before payment.
-No approved timeout, refund policy, or provider protocol is implied.
-end note
-legend bottom
-P-PAY / P-INTEGRATION proposed; FR-008-FR-009; NFR-008; AC-002, AC-005-AC-006.
-Reservation release follows its finite interval, independently of payment reconciliation.
-endlegend
 @enduml
